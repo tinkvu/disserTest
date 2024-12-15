@@ -53,9 +53,13 @@ def generate_response(text):
     return assistant_response
 
 def deepgram_tts(text, output_path):
-    options = SpeakOptions(model="aura-asteria-en")
-    response = deepgram.speak.v("1").save(output_path, text, options)
-    return output_path
+    try:
+        options = SpeakOptions(model="aura-asteria-en", text=text)
+        response = deepgram.speak.save(output_path, options)
+        return output_path
+    except Exception as e:
+        st.error(f"TTS generation failed: {e}")
+        return None
 
 # Streamlit App Interface
 st.title("English Language Trainer - Engli")
@@ -79,6 +83,7 @@ if uploaded_file:
     st.write(f"**Response:** {response}")
 
     response_audio_path = deepgram_tts(response, "response_audio.mp3")
-    st.audio(response_audio_path, format="audio/mp3")
+    if response_audio_path:
+        st.audio(response_audio_path, format="audio/mp3")
 else:
     st.info("Please upload an audio file to begin.")
