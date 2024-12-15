@@ -55,20 +55,23 @@ def generate_response(text):
 
 # Function to transcribe audio using Groq Whisper API
 def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
-    if isinstance(file_path_or_bytes, str):  # If file path is provided
-        with open(file_path_or_bytes, "rb") as file:
+    try:
+        if isinstance(file_path_or_bytes, str):  # If file path is provided
+            with open(file_path_or_bytes, "rb") as file:
+                transcription = client.audio.transcriptions.create(
+                    file=(os.path.basename(file_path_or_bytes), file.read()),
+                    model=model,
+                    response_format="verbose_json",
+                )
+        else:  # If file bytes are provided
             transcription = client.audio.transcriptions.create(
-                file=(os.path.basename(file_path_or_bytes), file.read()),
+                file=("recorded_audio.wav", file_path_or_bytes),
                 model=model,
                 response_format="verbose_json",
             )
-    else:  # If file bytes are provided
-        transcription = client.audio.transcriptions.create(
-            file=("recorded_audio.wav", file_path_or_bytes),
-            model=model,
-            response_format="verbose_json",
-        )
-    return transcription
+        return transcription["text"] if "text" in transcription else "Transcription failed."
+    except Exception as e:
+        return f"Transcription failed: {e}"
 
 # Function to play audio with gTTS
 def play_audio_with_gtts(text, output_file="output_audio.mp3"):
@@ -87,45 +90,18 @@ left_col, right_col = st.columns(2)
 left_col.subheader("Voice Chat")
 left_col.write("Record your audio below:")
 wav_audio_data = st_audiorec()
-"""st.write("Record your audio below:")
-    wav_audio_data = st_audiorec()  # Use st_audiorec for recording
-
-    if wav_audio_data is not None:
-        # Display the recorded audio
-        st.audio(wav_audio_data, format="audio/wav")
-
-        # Step 2: Transcribe the recorded audio
-        st.write("Transcribing audio...")
-        try:
-            transcription = transcribe_audio(wav_audio_data)
-
-            # Access transcription text and language attributes
-            transcription_text = transcription.text
-            transcription_language = transcription.language
-
-            st.subheader("Transcription Results:")
-            st.text(transcription_text)
-"""
-
-
 
 # Chat display area
 right_col.subheader("Transcriptions and Responses")
 if wav_audio_data is not None:
-        # Display the recorded audio
-        st.audio(wav_audio_data, format="audio/wav")
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
+        temp_audio.write(wav_audio_data)
+        audio_file = temp_audio.name
 
-        # Step 2: Transcribe the recorded audio
-        st.write("Transcribing audio...")
-        try:
-            transcription = transcribe_audio(wav_audio_data)
+    left_col.audio(audio_file, format="audio/wav")
 
-            # Access transcription text and language attributes
-            transcription_text = transcription.text
-            transcription_language = transcription.language
-
-            st.subheader("Transcription Results:")
-            st.text(transcription_text)
+    transcription_text = transcribe_audio(audio_file)
+    right_col.write(f"**Transcription:** {transcription_text}")
 
     response = generate_response(transcription_text)
     right_col.write(f"**Response:** {response}")
