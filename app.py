@@ -109,7 +109,7 @@ if wav_audio_data is not None:
 
     response_audio_path = play_audio_with_gtts(response, "response_audio.mp3")
     if response_audio_path:
-        left_col.audio(response_audio_path, format="audio/mp3")
+        left_col.audio(response_audio_path, format="audio/mp3", autoplay=True)
 # Display complete chat history
 for message in st.session_state.chat_history:
     if message["role"] == "user":
