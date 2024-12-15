@@ -55,8 +55,12 @@ def generate_response(text):
 def deepgram_tts(text, output_path):
     try:
         options = SpeakOptions(model="aura-asteria-en")
-        response = deepgram.speak.save(output_path, text, options)
-        return output_path
+        audio_folder = os.path.join("static", "audio")
+        if not os.path.exists(audio_folder):
+            os.makedirs(audio_folder)
+        filename = os.path.join(audio_folder, "output.mp3")
+        deepgram.speak.v("1").save(filename, {"text": text}, options)
+        return filename
     except Exception as e:
         st.error(f"TTS generation failed: {e}")
         return None
