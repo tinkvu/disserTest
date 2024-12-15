@@ -54,8 +54,8 @@ def generate_response(text):
 
 def deepgram_tts(text, output_path):
     try:
-        options = SpeakOptions(model="aura-asteria-en", text=text)
-        response = deepgram.speak.save(output_path, options)
+        options = SpeakOptions(model="aura-asteria-en")
+        response = deepgram.speak.save(output_path, text, options)
         return output_path
     except Exception as e:
         st.error(f"TTS generation failed: {e}")
