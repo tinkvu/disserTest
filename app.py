@@ -55,12 +55,16 @@ def generate_response(text):
 
 # Function to transcribe audio using Groq Whisper API
 def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
-    transcription = client.audio.transcriptions.create(
-        file=("recorded_audio.wav", file_path_or_bytes),
-        model=model,
-        response_format="verbose_json",
-    )
-    return transcription
+    try:
+        with open(file_path_or_bytes, "rb") as file:
+            transcription = client.audio.transcriptions.create(
+                file=(file_path_or_bytes, file.read()),
+                model=model,
+                response_format="verbose_json",
+            )
+        return transcription["text"] if "text" in transcription else "Transcription failed."
+    except Exception as e:
+        return f"Transcription failed: {e}"
 
 def deepgram_tts(text, output_path):
     try:
