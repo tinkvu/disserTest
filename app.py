@@ -28,6 +28,7 @@ if "chat_history" not in st.session_state:
             - Ask questions to enhance learning.
             - Generate responses even for brief inputs.
             - Focus on content over punctuation.
+            -Make the responses short and natural.
             """
         }
     ]
