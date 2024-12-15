@@ -54,20 +54,23 @@ def generate_response(text):
     return assistant_response
 
 def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
-    if isinstance(file_path_or_bytes, str):  # If file path is provided
-        with open(file_path_or_bytes, "rb") as file:
+    try:
+        if isinstance(file_path_or_bytes, str):  # If file path is provided
+            with open(file_path_or_bytes, "rb") as file:
+                transcription = client.audio.transcriptions.create(
+                    file=(os.path.basename(file_path_or_bytes), file.read()),
+                    model=model,
+                    response_format="verbose_json",
+                )
+        else:  # If file bytes are provided
             transcription = client.audio.transcriptions.create(
-                file=(os.path.basename(file_path_or_bytes), file.read()),
+                file=("recorded_audio.wav", file_path_or_bytes),
                 model=model,
                 response_format="verbose_json",
             )
-    else:  # If file bytes are provided
-        transcription = client.audio.transcriptions.create(
-            file=("recorded_audio.wav", file_path_or_bytes),
-            model=model,
-            response_format="verbose_json",
-        )
-    return transcription
+        return transcription.get("text", "Transcription failed.")
+    except Exception as e:
+        return f"Transcription failed: {e}"
 
 def deepgram_tts(text, output_path):
     try:
@@ -103,8 +106,7 @@ if wav_audio_data is not None:
 
     left_col.audio(audio_file, format="audio/wav")
 
-    transcription = transcribe_audio(audio_file)
-    transcription_text = transcription["text"] if "text" in transcription else "Transcription failed."
+    transcription_text = transcribe_audio(audio_file)
     right_col.write(f"**Transcription:** {transcription_text}")
 
     response = generate_response(transcription_text)
