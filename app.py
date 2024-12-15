@@ -55,39 +55,29 @@ def generate_response(text):
 
 # Function to transcribe audio using Groq Whisper API
 def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
-    if isinstance(file_path_or_bytes, str):  # If file path is provided
-        with open(file_path_or_bytes, "rb") as file:
+    try:
+        if isinstance(file_path_or_bytes, str):  # If file path is provided
+            with open(file_path_or_bytes, "rb") as file:
+                transcription = client.audio.transcriptions.create(
+                    file=(os.path.basename(file_path_or_bytes), file.read()),
+                    model=model,
+                    response_format="verbose_json",
+                )
+        else:  # If file bytes are provided
             transcription = client.audio.transcriptions.create(
-                file=(os.path.basename(file_path_or_bytes), file.read()),
+                file=("recorded_audio.wav", file_path_or_bytes),
                 model=model,
                 response_format="verbose_json",
             )
-    else:  # If file bytes are provided
-        transcription = client.audio.transcriptions.create(
-            file=("recorded_audio.wav", file_path_or_bytes),
-            model=model,
-            response_format="verbose_json",
-        )
-    return transcription
+        return transcription["text"] if "text" in transcription else "Transcription failed."
+    except Exception as e:
+        return f"Transcription failed: {e}"
 
 # Function to play audio with gTTS
 def play_audio_with_gtts(text, output_file="output_audio.mp3"):
     tts = gTTS(text)
     tts.save(output_file)
     return output_file
-
-def deepgram_tts(text, output_path):
-    try:
-        options = SpeakOptions(model="aura-asteria-en")
-        audio_folder = os.path.join("static", "audio")
-        if not os.path.exists(audio_folder):
-            os.makedirs(audio_folder)
-        filename = os.path.join(audio_folder, "output.mp3")
-        deepgram.speak.v("1").save(filename, {"text": text}, options)
-        return filename
-    except Exception as e:
-        st.error(f"TTS generation failed: {e}")
-        return None
 
 # Streamlit App Interface
 st.set_page_config(layout="wide")
@@ -110,8 +100,7 @@ if wav_audio_data is not None:
 
     left_col.audio(audio_file, format="audio/wav")
 
-    transcription = transcribe_audio(audio_file)
-    transcription_text = transcription["text"] if "text" in transcription else "Transcription failed."
+    transcription_text = transcribe_audio(audio_file)
     right_col.write(f"**Transcription:** {transcription_text}")
 
     response = generate_response(transcription_text)
