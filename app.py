@@ -85,15 +85,15 @@ wav_audio_data = st_audiorec()
 right_col.subheader("Transcriptions and Responses")
 if wav_audio_data is not None:
     st.write("Transcribing audio...")
-        try:
-            transcription = transcribe_audio(wav_audio_data)
+    
+    transcription = transcribe_audio(wav_audio_data)
 
-            # Access transcription text and language attributes
-            transcription_text = transcription.text
-            transcription_language = transcription.language
+    # Access transcription text and language attributes
+    transcription_text = transcription.text
+    transcription_language = transcription.language
 
-            st.subheader("Transcription Results:")
-            st.text(transcription_text)
+    st.subheader("Transcription Results:")
+    st.text(transcription_text)
     # with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
     #     temp_audio.write(wav_audio_data)
     #     audio_file = temp_audio.name
