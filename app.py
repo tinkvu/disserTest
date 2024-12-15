@@ -16,24 +16,24 @@ DEEPGRAM_API_KEY = "1848116a3ad5d37cd32bd12e8edbc3d35def1064"
 client = Groq(api_key=GROQ_API_KEY)
 deepgram = DeepgramClient(DEEPGRAM_API_KEY)
 
-# Initial chat history
-chat_history = [
-    {
-        "role": "system",
-        "content": """
-        ### Chat ###
-        You are an English Language Teacher named Engli
-        - List any mistakes the user makes and correct them first.
-        - Your job is to keep communicating with the user and make them speak.
-        - Don't use any emojis, and the responses should be in English.
-        - Ask the user questions and help them improve their English.
-        - Never stop the conversation. You should generate a response.
-        - The responses should mimic a natural human conversational style.
-        - If the user message is too short or null, ask them to say it again.
-        - Ignore symbol mistakes like missing question marks or commas, since this is a voice chat.
-        """
-    }
-]
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = [
+        {
+            "role": "system",
+            "content": """
+            ### Chat ###
+            You are an English Language Teacher named Engli
+            - List any mistakes the user makes and correct them first.
+            - Your job is to keep communicating with the user and make them speak.
+            - Don't use any emojis, and the responses should be in English.
+            - Ask the user questions and help them improve their English.
+            - Never stop the conversation. You should generate a response.
+            - The responses should mimic a natural human conversational style.
+            - If the user message is too short or null, ask them to say it again.
+            - Ignore symbol mistakes like missing question marks or commas, since this is a voice chat.
+            """
+        }
+    ]
 
 # Helper functions
 def get_current_time():
@@ -50,7 +50,8 @@ def generate_response(text):
     )
 
     assistant_response = completion.choices[0].message.content
-    chat_history.append({"role": "assistant", "content": assistant_response})
+    st.session_state.chat_history.append({"role": "user", "content": text})
+    st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
     return assistant_response
 
 # Function to transcribe audio using Groq Whisper API
@@ -109,5 +110,12 @@ if wav_audio_data is not None:
     response_audio_path = play_audio_with_gtts(response, "response_audio.mp3")
     if response_audio_path:
         left_col.audio(response_audio_path, format="audio/mp3")
+# Display complete chat history
+for message in st.session_state.chat_history:
+    if message["role"] == "user":
+        right_col.markdown(f"**You:** {message['content']}")
+    elif message["role"] == "assistant":
+        right_col.markdown(f"**Engli:** {message['content']}")
 else:
     left_col.info("Please record an audio to begin.")
+
