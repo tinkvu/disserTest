@@ -68,7 +68,7 @@ def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
     return transcription
 
 # Function to play audio using Deepgram TTS
-def deepgram_tts(text, output_path="output_audio.mp3", module=None):
+def deepgram_tts(text, output_path="output_audio.mp3", module):
     try:
         options = SpeakOptions(model="aura-angus-en" if module == "Irish Slangs" else "aura-asteria-en")
         audio_folder = os.path.join("static", "audio")
