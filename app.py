@@ -100,7 +100,7 @@ if wav_audio_data is not None:
 
     # left_col.audio(audio_file, format="audio/wav")
 
-    transcription_text = transcribe_audio(audio_file)
+    # transcription_text = transcribe_audio(audio_file)
     right_col.write(f"**Transcription:** {transcription_text}")
 
     response = generate_response(transcription_text)
