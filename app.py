@@ -6,6 +6,7 @@ from gtts import gTTS
 from groq import Groq
 import tempfile
 import subprocess
+from st_audiorec import st_audiorec
 
 # API Keys
 GROQ_API_KEY = "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"
@@ -66,28 +67,35 @@ def deepgram_tts(text, output_path):
         return None
 
 # Streamlit App Interface
+st.set_page_config(layout="wide")
 st.title("English Language Trainer - Engli")
 
-uploaded_file = st.file_uploader("Upload your audio file", type=["mp3", "wav"])
+# Left and right columns
+left_col, right_col = st.columns(2)
 
-if uploaded_file:
-    st.success(f"Uploaded file: {uploaded_file.name}")
+# Audio recording feature
+left_col.subheader("Voice Chat")
+left_col.write("Record your audio below:")
+wav_audio_data = st_audiorec()
 
+# Chat display area
+right_col.subheader("Transcriptions and Responses")
+if wav_audio_data is not None:
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
-        temp_audio.write(uploaded_file.getbuffer())
+        temp_audio.write(wav_audio_data)
         audio_file = temp_audio.name
 
-    st.audio(audio_file, format="audio/wav")
+    left_col.audio(audio_file, format="audio/wav")
 
     # Simulate transcription (mock for now)
     transcription_text = "This is a sample transcription of the audio file."
-    st.write(f"**Transcription:** {transcription_text}")
+    right_col.write(f"**Transcription:** {transcription_text}")
 
     response = generate_response(transcription_text)
-    st.write(f"**Response:** {response}")
+    right_col.write(f"**Response:** {response}")
 
     response_audio_path = deepgram_tts(response, "response_audio.mp3")
     if response_audio_path:
-        st.audio(response_audio_path, format="audio/mp3")
+        left_col.audio(response_audio_path, format="audio/mp3")
 else:
-    st.info("Please upload an audio file to begin.")
+    left_col.info("Please record an audio to begin.")
