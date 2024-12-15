@@ -16,8 +16,9 @@ DEEPGRAM_API_KEY = "1848116a3ad5d37cd32bd12e8edbc3d35def1064"
 client = Groq(api_key=GROQ_API_KEY)
 deepgram = DeepgramClient(DEEPGRAM_API_KEY)
 
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = [
+# Initialize session state for chat history
+if "st.session_state.chat_history" not in st.session_state:
+    st.session_state.st.session_state.chat_history = [
         {
             "role": "system",
             "content": """
@@ -34,7 +35,6 @@ if "chat_history" not in st.session_state:
             """
         }
     ]
-
 # Helper functions
 def get_current_time():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -50,10 +50,9 @@ def generate_response(text):
     )
 
     assistant_response = completion.choices[0].message.content
-    st.session_state.chat_history.append({"role": "user", "content": text})
-    st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
+    st.session_state.st.session_state.chat_history.append({"role": "user", "content": text})
+    st.session_state.st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
     return assistant_response
-
 # Function to transcribe audio using Groq Whisper API
 def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
     transcription = client.audio.transcriptions.create(
@@ -111,7 +110,7 @@ if wav_audio_data is not None:
     if response_audio_path:
         left_col.audio(response_audio_path, format="audio/mp3")
 # Display complete chat history
-for message in st.session_state.chat_history:
+for message in st.session_state.st.session_state.chat_history:
     if message["role"] == "user":
         right_col.markdown(f"**You:** {message['content']}")
     elif message["role"] == "assistant":
