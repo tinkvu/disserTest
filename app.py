@@ -102,10 +102,10 @@ if wav_audio_data is not None:
     # left_col.audio(audio_file, format="audio/wav")
 
     # transcription_text = transcribe_audio(audio_file)
-    right_col.write(f"**Transcription:** {transcription_text}")
+    
 
     response = generate_response(transcription_text)
-    right_col.write(f"**Response:** {response}")
+    
 
     response_audio_path = play_audio_with_gtts(response, "response_audio.mp3")
     if response_audio_path:
@@ -118,5 +118,6 @@ for message in st.session_state.chat_history:
         right_col.markdown(f"**Engli:** {message['content']}")
 else:
     left_col.info("Please record an audio to begin.")
+
 
 
