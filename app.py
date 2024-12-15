@@ -2,7 +2,6 @@ import streamlit as st
 import os
 from deepgram import DeepgramClient, SpeakOptions
 from datetime import datetime
-from pydub import AudioSegment
 from gtts import gTTS
 from groq import Groq
 import tempfile
@@ -66,18 +65,7 @@ uploaded_file = st.file_uploader("Upload your audio file", type=["mp3", "wav"])
 if uploaded_file:
     st.success(f"Uploaded file: {uploaded_file.name}")
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
-        audio_file = temp_file.name
-        if not uploaded_file.name.endswith(".wav"):
-            try:
-                sound = AudioSegment.from_file(uploaded_file)
-                sound.export(audio_file, format="wav")
-            except FileNotFoundError:
-                st.error("'ffprobe' is required but not found. Please install ffmpeg.")
-                st.stop()
-        else:
-            audio_file = uploaded_file.name
-
+    audio_file = uploaded_file.name
     st.audio(audio_file, format="audio/wav")
 
     # Simulate transcription (mock for now)
