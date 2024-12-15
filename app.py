@@ -68,7 +68,7 @@ def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
                 model=model,
                 response_format="verbose_json",
             )
-        return transcription.get("text", "Transcription failed.")
+        return transcription["text"] if "text" in transcription else "Transcription failed."
     except Exception as e:
         return f"Transcription failed: {e}"
 
