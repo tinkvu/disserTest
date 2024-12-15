@@ -10,8 +10,8 @@ import tempfile
 
 # Load environment variables
 load_dotenv()
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
+GROQ_API_KEY = "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"
+DEEPGRAM_API_KEY = "1848116a3ad5d37cd32bd12e8edbc3d35def1064"
 
 # Initialize API clients
 client = Groq(api_key=GROQ_API_KEY)
