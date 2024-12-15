@@ -28,7 +28,6 @@ if "chat_history" not in st.session_state:
             - Ask questions to enhance learning.
             - Generate responses even for brief inputs.
             - Focus on content over punctuation.
-            -Make the responses short and natural.
             """
         }
     ]
@@ -60,11 +59,19 @@ def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
     )
     return transcription
 
-# Function to play audio with gTTS
-def play_audio_with_gtts(text, output_file="output_audio.mp3"):
-    tts = gTTS(text)
-    tts.save(output_file)
-    return output_file
+# Function to play audio using Deepgram TTS
+def deepgram_tts(text, output_path="output_audio.mp3"):
+    try:
+        options = SpeakOptions(model="aura-asteria-en")
+        audio_folder = os.path.join("static", "audio")
+        if not os.path.exists(audio_folder):
+            os.makedirs(audio_folder)
+        filename = os.path.join(audio_folder, output_path)
+        deepgram.speak.v("1").save(filename, {"text": text}, options)
+        return filename
+    except Exception as e:
+        st.error(f"TTS generation failed: {e}")
+        return None
 
 # Streamlit App Interface
 st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="🎤")
@@ -87,7 +94,7 @@ if wav_audio_data is not None:
     transcription_text = transcription.text
 
     response = generate_response(transcription_text)
-    response_audio_path = play_audio_with_gtts(response, "response_audio.mp3")
+    response_audio_path = deepgram_tts(response, "response_audio.mp3")
 
     if response_audio_path:
         left_col.audio(response_audio_path, format="audio/mp3", autoplay=True)
