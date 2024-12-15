@@ -65,7 +65,10 @@ uploaded_file = st.file_uploader("Upload your audio file", type=["mp3", "wav"])
 if uploaded_file:
     st.success(f"Uploaded file: {uploaded_file.name}")
 
-    audio_file = uploaded_file.name
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
+        temp_audio.write(uploaded_file.getbuffer())
+        audio_file = temp_audio.name
+
     st.audio(audio_file, format="audio/wav")
 
     # Simulate transcription (mock for now)
