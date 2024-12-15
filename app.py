@@ -60,7 +60,7 @@ def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
         model=model,
         response_format="verbose_json",
     )
-    return transcription["text"] if "text" in transcription else "Transcription failed."
+    return transcription
 
 
 # Function to play audio with gTTS
@@ -90,7 +90,7 @@ if wav_audio_data is not None:
 
     # Access transcription text and language attributes
     transcription_text = transcription.text
-    transcription_language = transcription.language
+    # transcription_language = transcription.language
 
     st.subheader("Transcription Results:")
     st.text(transcription_text)
