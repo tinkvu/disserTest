@@ -18,8 +18,8 @@ deepgram = DeepgramClient(DEEPGRAM_API_KEY)
 
 
 # Initialize session state for chat history
-if "st.session_state.chat_history" not in st.session_state:
-    st.session_state.st.session_state.chat_history = [
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = [
         {
             "role": "system",
             "content": """
@@ -51,8 +51,8 @@ def generate_response(text):
     )
 
     assistant_response = completion.choices[0].message.content
-    st.session_state.st.session_state.chat_history.append({"role": "user", "content": text})
-    st.session_state.st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
+    st.session_state.chat_history.append({"role": "user", "content": text})
+    st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
     return assistant_response
 # Function to transcribe audio using Groq Whisper API
 def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
@@ -111,12 +111,13 @@ if wav_audio_data is not None:
     if response_audio_path:
         left_col.audio(response_audio_path, format="audio/mp3")
 # Display complete chat history
-for message in st.session_state.st.session_state.chat_history:
+for message in st.session_state.chat_history:
     if message["role"] == "user":
         right_col.markdown(f"**You:** {message['content']}")
     elif message["role"] == "assistant":
         right_col.markdown(f"**Engli:** {message['content']}")
 else:
     left_col.info("Please record an audio to begin.")
+
 
 
