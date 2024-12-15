@@ -50,6 +50,16 @@ def initialize_chat_history(module_name):
             }
         ]
 
+# Function to pronounce text using gTTS
+def pronounce_text(text):
+    try:
+        tts = gTTS(text)
+        tts.save("pronunciation.mp3")
+        return "pronunciation.mp3"
+    except Exception as e:
+        st.error(f"Pronunciation generation failed: {e}")
+        return None
+
 # Helper functions
 def generate_response(text):
     completion = client.chat.completions.create(
@@ -100,6 +110,15 @@ initialize_chat_history(module)
 
 # Left and right columns
 left_col, right_col = st.columns([1, 2])
+
+# Pronunciation feature
+if module == "Any Language to English":
+    left_col.subheader("🔊 Pronunciation Helper")
+    text_to_pronounce = left_col.text_input("Enter text for pronunciation:")
+    if text_to_pronounce:
+        audio_file = pronounce_text(text_to_pronounce)
+        if audio_file:
+            left_col.audio(audio_file, format="audio/mp3", autoplay=True)
 
 # Audio recording feature
 left_col.subheader("🎙️ Voice Chat")
