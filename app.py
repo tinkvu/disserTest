@@ -107,7 +107,7 @@ if wav_audio_data is not None:
     transcription_text = transcription.text
 
     response = generate_response(transcription_text)
-    response_audio_path = deepgram_tts(response, "response_audio.mp3")
+    response_audio_path = deepgram_tts(response, "response_audio.mp3", module)
 
     if response_audio_path:
         left_col.audio(response_audio_path, format="audio/mp3", autoplay=True)
