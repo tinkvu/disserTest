@@ -4,12 +4,11 @@ from deepgram import DeepgramClient, SpeakOptions
 from datetime import datetime
 from pydub import AudioSegment
 from gtts import gTTS
-from dotenv import load_dotenv
 from groq import Groq
 import tempfile
+import subprocess
 
-# Load environment variables
-load_dotenv()
+# API Keys
 GROQ_API_KEY = "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"
 DEEPGRAM_API_KEY = "1848116a3ad5d37cd32bd12e8edbc3d35def1064"
 
@@ -70,8 +69,12 @@ if uploaded_file:
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
         audio_file = temp_file.name
         if not uploaded_file.name.endswith(".wav"):
-            sound = AudioSegment.from_file(uploaded_file)
-            sound.export(audio_file, format="wav")
+            try:
+                sound = AudioSegment.from_file(uploaded_file)
+                sound.export(audio_file, format="wav")
+            except FileNotFoundError:
+                st.error("'ffprobe' is required but not found. Please install ffmpeg.")
+                st.stop()
         else:
             audio_file = uploaded_file.name
 
