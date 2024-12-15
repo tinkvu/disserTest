@@ -43,7 +43,7 @@ def get_current_time():
 def generate_response(text):
     completion = client.chat.completions.create(
         model="llama3-8b-8192",
-        messages=chat_history + [{"role": "user", "content": text}],
+        messages=st.session_state.chat_history + [{"role": "user", "content": text}],
         temperature=1,
         max_tokens=1024,
         top_p=1,
