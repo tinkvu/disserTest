@@ -36,7 +36,6 @@ if "chat_history" not in st.session_state:
             """
         }
     ]
-
 # Helper functions
 def get_current_time():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -119,4 +118,5 @@ for message in st.session_state.chat_history:
         right_col.markdown(f"**Engli:** {message['content']}")
 else:
     left_col.info("Please record an audio to begin.")
+
 
