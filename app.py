@@ -53,6 +53,22 @@ def generate_response(text):
     chat_history.append({"role": "assistant", "content": assistant_response})
     return assistant_response
 
+def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
+    if isinstance(file_path_or_bytes, str):  # If file path is provided
+        with open(file_path_or_bytes, "rb") as file:
+            transcription = client.audio.transcriptions.create(
+                file=(os.path.basename(file_path_or_bytes), file.read()),
+                model=model,
+                response_format="verbose_json",
+            )
+    else:  # If file bytes are provided
+        transcription = client.audio.transcriptions.create(
+            file=("recorded_audio.wav", file_path_or_bytes),
+            model=model,
+            response_format="verbose_json",
+        )
+    return transcription
+
 def deepgram_tts(text, output_path):
     try:
         options = SpeakOptions(model="aura-asteria-en")
@@ -87,8 +103,8 @@ if wav_audio_data is not None:
 
     left_col.audio(audio_file, format="audio/wav")
 
-    # Simulate transcription (mock for now)
-    transcription_text = "This is a sample transcription of the audio file."
+    transcription = transcribe_audio(audio_file)
+    transcription_text = transcription["text"] if "text" in transcription else "Transcription failed."
     right_col.write(f"**Transcription:** {transcription_text}")
 
     response = generate_response(transcription_text)
