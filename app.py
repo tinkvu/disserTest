@@ -137,7 +137,7 @@ else:
             st.session_state.chat_history.append({"role": "user", "content": transcription_text})
             st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
 
-            deepgram.speak.v("1").save("response_audio.mp3", {"text": assistant_response}, SpeakOptions(model="aura-asteria-en"))
+            deepgram.speak.v("1").save("response_audio.mp3", {"text": assistant_response}, SpeakOptions(model="aura-angus-en" if module in ["Irish Slangs", "Cultural Insights"] else "aura-asteria-en"))
             st.audio("response_audio.mp3", format="audio/mp3", autoplay=True)
 
         for message in st.session_state.chat_history:
@@ -150,4 +150,7 @@ else:
                     "Irish Slangs": "Connor",
                     "Cultural Insights": "Garron"
                 }.get(st.session_state.current_module, "Assistant")
-                right_col.markdown(f"**🤖 {assistant_name}:** {message['content']}\n")
+                icon = "👩🏼" if st.session_state.current_module in ["English Conversation Friend", "Corporate English"] else "👨🏼"
+right_col.markdown(f"**{icon} {assistant_name}:** {message['content']}
+")
+              
