@@ -27,9 +27,9 @@ if "user_details" not in st.session_state:
 # Collect user details
 with st.sidebar.form("user_details_form"):
     st.header("User Information")
-    st.session_state.user_details["name"] = st.text_input("Your Name:", placeholder="Gustavo")
-    st.session_state.user_details["profession"] = st.text_input("Your Profession:", placeholder="Chef")
-    st.session_state.user_details["nationality"] = st.text_input("Your Nationality:", placeholder="Brazilian")
+    st.session_state.user_details["name"] = st.text_input("Your Name:", placeholder="John Doe")
+    st.session_state.user_details["profession"] = st.text_input("Your Profession:", placeholder="Software Engineer")
+    st.session_state.user_details["nationality"] = st.text_input("Your Nationality:", placeholder="American")
     st.session_state.user_details["age"] = st.number_input("Your Age:", min_value=1, max_value=120, step=1, value=30)
     submitted = st.form_submit_button("Submit")
 
@@ -64,6 +64,10 @@ def initialize_chat_history(module_name):
                 "content": f"You translate text from any language to English. Output just only the english translation"
             }
         ]
+
+# Reset conversation
+if st.sidebar.button("Reset Conversation"):
+    initialize_chat_history(st.session_state.current_module)
 
 # Function to pronounce text using gTTS
 def pronounce_text(text):
