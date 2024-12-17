@@ -144,5 +144,10 @@ else:
             if message["role"] == "user":
                 right_col.markdown(f"**👤 You:** {message['content']}")
             elif message["role"] == "assistant":
-                right_col.markdown(f"**🤖 {st.session_state.current_module.split(' ')[0]}:** {message['content']}\n")
-              
+                assistant_name = {
+                    "English Conversation Friend": "Engli",
+                    "Corporate English": "Engli",
+                    "Irish Slangs": "Connor",
+                    "Cultural Insights": "Garron"
+                }.get(st.session_state.current_module, "Assistant")
+                right_col.markdown(f"**🤖 {assistant_name}:** {message['content']}\n")
