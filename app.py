@@ -113,9 +113,6 @@ def deepgram_tts(text, output_path="output_audio.mp3", module=None):
         st.error(f"TTS generation failed: {e}")
         return None
 
-# Streamlit App Interface
-
-
 # Module selection
 module = st.sidebar.selectbox(
     "Select a Module", ["English Conversation Friend", "Corporate English", "Irish Slangs", "Any Language to English"]
@@ -124,8 +121,6 @@ module = st.sidebar.selectbox(
 # Update the app title based on the selected module
 st.title(f"🎤 {module}")
 
-    "Select a Module", ["English Conversation Friend", "Corporate English", "Irish Slangs", "Any Language to English"]
-)
 if "current_module" not in st.session_state or st.session_state.current_module != module:
     initialize_chat_history(module)
     st.session_state.current_module = module
