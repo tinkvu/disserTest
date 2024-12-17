@@ -156,16 +156,16 @@ with st.sidebar:
     with st.expander("👤 User Profile", expanded=True):
         with st.form("user_details_form"):
             st.write("Tell us about yourself")
-            col1, col2 = st.columns(2)
+            # col1, col2 = st.columns(2)
             
-            with col1:
-                st.session_state.user_details["name"] = st.text_input("Your Name:", value="Gustavo")
-                st.session_state.user_details["age"] = st.number_input("Your Age:", min_value=1, max_value=120, step=1, value=30)
-            
-            with col2:
-                st.session_state.user_details["profession"] = st.text_input("Your Profession:", value="Software Engineer")
-                st.session_state.user_details["nationality"] = st.text_input("Your Nationality:", value="Brazilian")
-            
+            # with col1:
+            st.session_state.user_details["name"] = st.text_input("Your Name:", value="Gustavo")
+            st.session_state.user_details["age"] = st.number_input("Your Age:", min_value=1, max_value=120, step=1, value=30)
+        
+            # with col2:
+            st.session_state.user_details["profession"] = st.text_input("Your Profession:", value="Software Engineer")
+            st.session_state.user_details["nationality"] = st.text_input("Your Nationality:", value="Brazilian")
+        
             submitted = st.form_submit_button("Save Profile", type="primary")
     
     st.markdown("---")
