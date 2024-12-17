@@ -140,8 +140,17 @@ else:
             deepgram.speak.v("1").save("response_audio.mp3", {"text": assistant_response}, SpeakOptions(model="aura-asteria-en"))
             st.audio("response_audio.mp3", format="audio/mp3", autoplay=True)
 
-        for message in st.session_state.chat_history:
-            if message["role"] == "user":
-                right_col.markdown(f"**👤 You:** {message['content']}")
-            elif message["role"] == "assistant":
-                right_col.markdown(f"**🤖 Engli:** {message['content']}")
+     # Chat display area
+    right_col = st.container()
+    for message in st.session_state.chat_history:
+        if message["role"] == "user":
+            right_col.markdown(f"**👤 You:** {message['content']}")
+        elif message["role"] == "assistant":
+            assistant_name = {
+                "English Conversation Friend": "Engli",
+                "Corporate English": "Alex",
+                "Irish Slangs": "Connor",
+                "Cultural Insights": "Garron"
+            }.get(st.session_state.current_module, "Assistant")
+            icon = "👩🏼" if st.session_state.current_module in ["English Conversation Friend", "Corporate English"] else "👨🏼"
+            right_col.markdown(f"**{icon} {assistant_name}:** {message['content']}\n")
