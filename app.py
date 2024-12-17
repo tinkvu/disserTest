@@ -7,6 +7,9 @@ from groq import Groq
 import tempfile
 from st_audiorec import st_audiorec
 
+# Streamlit App Interface
+st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="🎤")
+
 # API Keys
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
@@ -111,7 +114,6 @@ def deepgram_tts(text, output_path="output_audio.mp3", module=None):
         return None
 
 # Streamlit App Interface
-st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="🎤")
 st.title("🎤 English Language Trainer - Engli")
 
 # Module selection
