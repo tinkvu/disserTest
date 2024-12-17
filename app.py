@@ -177,7 +177,11 @@ with st.sidebar:
         help="Select the type of English learning experience you want"
     )
     
+    # In the sidebar section, replace the existing reset button with:
     if st.button("Reset Conversation", type="secondary"):
+        # Clear entire chat history
+        st.session_state.chat_history = []
+        # Reinitialize chat history for current module
         initialize_chat_history(module)
 
 # Main App Title
@@ -185,6 +189,9 @@ st.title(f"🎤 {module}")
 
 # Initialize chat history if not already done
 if "current_module" not in st.session_state or st.session_state.current_module != module:
+    # Clear existing chat history
+    st.session_state.chat_history = []
+    # Initialize new chat history for the selected module
     initialize_chat_history(module)
     st.session_state.current_module = module
 
