@@ -40,28 +40,28 @@ def initialize_chat_history(module_name):
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You are an English Language Teacher named Engli from Ireland. Keep conversations friendly and correct mistakes if any. Your aim is to be the user's English-speaking companion to improve English communication skills. Speak to the user in only English. Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Make the responses shorter. The user is: {user_info}"
+                "content": f"You are an English Language Teacher named Engli from Ireland. Keep conversations friendly and correct mistakes if any. Your aim is to be the user's English-speaking companion to improve communication skills. The user is: {user_info}"
             }
         ]
     elif module_name == "Corporate English":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You are a Corporate English Coach named Alex. Ask the user's profession and provide relevant business communication tips. Use concise and professional language.  Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Make the responses shorter. The user is: {user_info}"
+                "content": f"You are a Corporate English Coach named Alex. Ask the user's profession and provide relevant business communication tips. The user is: {user_info}"
             }
         ]
     elif module_name == "Irish Slangs":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You are a lively old Irish person named Connor. Use Irish slang naturally and explain it when necessary. Keep the chat engaging and fun.  Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Make the responses shorter. The user is:{user_info}"
+                "content": f"You are a lively old Irish person named Connor. Use Irish slang naturally and explain it when necessary. Keep the chat engaging and fun. The user is:{user_info}"
             }
         ]
     elif module_name == "Cultural Insights":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You are a cultural guide in Ireland named Garron. Explain Irish culture, customs, and common phrases. Include practical tips for daily life. Make the responses short.  Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Make the responses shorter. The user is: {user_info}"
+                "content": f"You are a cultural guide in Ireland named Garron. Explain Irish culture, customs, and common phrases. Include practical tips for daily life. The user is: {user_info}"
             }
         ]
 
@@ -69,7 +69,9 @@ def initialize_chat_history(module_name):
 if st.sidebar.button("Reset Conversation"):
     if "current_module" in st.session_state:
         initialize_chat_history(st.session_state.current_module)
-        st.success("Conversation reset successfully!")
+        st.session_state.chat_history.clear()
+        initialize_chat_history(st.session_state.current_module)
+        st.success("Conversation reset successfully! New chat started.")
     else:
         st.warning("Please select a module first.")
 
@@ -81,73 +83,36 @@ module = st.sidebar.selectbox(
 # Update the app title based on the selected module
 st.title(f"🎤 {module}")
 
-if module == "Tutorial":
-    st.header("📚 Welcome to Engli - English Trainer")
-    st.markdown(
-        """### About the Modules:
-        - **English Conversation Friend:** Engage in natural conversations while receiving gentle corrections.
-        - **Corporate English:** Learn professional English tailored to your career.
-        - **Irish Slangs:** Experience a fun, interactive chat using authentic Irish slang.
-        - **Pronunciation Checker:** Enter words or phrases to hear their correct pronunciation.
-        - **Cultural Insights:** Learn about Irish culture, customs, and practical tips for everyday life.
-
-        **Get Started Today!**
-        """
-    )
-else:
+if module != "Tutorial":
     if "current_module" not in st.session_state or st.session_state.current_module != module:
         initialize_chat_history(module)
         st.session_state.current_module = module
         st.success("Module changed. Conversation reset!")
-        initialize_chat_history(module)
-        st.session_state.current_module = module
 
     # Chat display area
     right_col = st.container()
-    if module == "Pronunciation Checker":
-        st.subheader("🔊 Pronunciation Checker")
-        text_to_pronounce = st.text_input("Enter text for pronunciation:", placeholder="Dún Laoghaire")
-        if text_to_pronounce:
-            tts = gTTS(text_to_pronounce)
-            tts.save("pronunciation.mp3")
-            st.audio("pronunciation.mp3", format="audio/mp3", autoplay=True)
-    else:
-        st.subheader("🎙️ Voice Chat")
-        st.info("**Press record and start speaking!**")
-        wav_audio_data = st_audiorec()
+    for message in st.session_state.chat_history:
+        if message["role"] == "user":
+            right_col.markdown(f"**👤 You:** {message['content']}")
+        elif message["role"] == "assistant":
+            assistant_name = {
+                "English Conversation Friend": "Engli",
+                "Corporate English": "Alex",
+                "Irish Slangs": "Connor",
+                "Cultural Insights": "Garron"
+            }.get(st.session_state.current_module, "Assistant")
+            right_col.markdown(f"**🤖 {assistant_name}:** {message['content']}\n")
 
-        if wav_audio_data is not None:
-            st.success("Recording successful! Transcribing audio...")
-            transcription = client.audio.transcriptions.create(
-                file=("recorded_audio.wav", wav_audio_data),
-                model="whisper-large-v3",
-                response_format="verbose_json",
-            )
-            transcription_text = transcription.text
-
-            completion = client.chat.completions.create(
-                model="llama3-8b-8192",
-                messages=st.session_state.chat_history + [{"role": "user", "content": transcription_text}],
-                temperature=1,
-                max_tokens=1024,
-                top_p=1,
-                stream=False
-            )
-            assistant_response = completion.choices[0].message.content
-            st.session_state.chat_history.append({"role": "user", "content": transcription_text})
-            st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
-
-            deepgram.speak.v("1").save("response_audio.mp3", {"text": assistant_response}, SpeakOptions(model="aura-asteria-en"))
-            st.audio("response_audio.mp3", format="audio/mp3", autoplay=True)
-
-        for message in st.session_state.chat_history:
-            if message["role"] == "user":
-                right_col.markdown(f"**👤 You:** {message['content']}")
-            elif message["role"] == "assistant":
-                assistant_name = {
-                    "English Conversation Friend": "Engli",
-                    "Corporate English": "Engli",
-                    "Irish Slangs": "Connor",
-                    "Cultural Insights": "Garron"
-                }.get(st.session_state.current_module, "Assistant")
-                right_col.markdown(f"**🤖 {assistant_name}:** {message['content']}\n")
+# Function to play audio using Deepgram TTS
+def deepgram_tts(text, output_path="output_audio.mp3", module=None):
+    try:
+        options = SpeakOptions(model="aura-angus-en" if module in ["Irish Slangs", "Cultural Insights"] else "aura-asteria-en")
+        audio_folder = os.path.join("static", "audio")
+        if not os.path.exists(audio_folder):
+            os.makedirs(audio_folder)
+        filename = os.path.join(audio_folder, output_path)
+        deepgram.speak.v("1").save(filename, {"text": text}, options)
+        return filename
+    except Exception as e:
+        st.error(f"TTS generation failed: {e}")
+        return None
