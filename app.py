@@ -99,58 +99,18 @@ else:
         initialize_chat_history(module)
         st.session_state.current_module = module
         st.success("Module changed. Conversation reset!")
-        initialize_chat_history(module)
-        st.session_state.current_module = module
 
     # Chat display area
     right_col = st.container()
-    if module == "Pronunciation Checker":
-        st.subheader("🔊 Pronunciation Checker")
-        text_to_pronounce = st.text_input("Enter text for pronunciation:", placeholder="Dún Laoghaire")
-        if text_to_pronounce:
-            tts = gTTS(text_to_pronounce)
-            tts.save("pronunciation.mp3")
-            st.audio("pronunciation.mp3", format="audio/mp3", autoplay=True)
-    else:
-        st.subheader("🎙️ Voice Chat")
-        st.info("**Press record and start speaking!**")
-        wav_audio_data = st_audiorec()
-
-        if wav_audio_data is not None:
-            st.success("Recording successful! Transcribing audio...")
-            transcription = client.audio.transcriptions.create(
-                file=("recorded_audio.wav", wav_audio_data),
-                model="whisper-large-v3",
-                response_format="verbose_json",
-            )
-            transcription_text = transcription.text
-
-            completion = client.chat.completions.create(
-                model="llama3-8b-8192",
-                messages=st.session_state.chat_history + [{"role": "user", "content": transcription_text}],
-                temperature=1,
-                max_tokens=1024,
-                top_p=1,
-                stream=False
-            )
-            assistant_response = completion.choices[0].message.content
-            st.session_state.chat_history.append({"role": "user", "content": transcription_text})
-            st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
-
-            deepgram.speak.v("1").save("response_audio.mp3", {"text": assistant_response}, SpeakOptions(model="aura-angus-en" if module in ["Irish Slangs", "Cultural Insights"] else "aura-asteria-en"))
-            st.audio("response_audio.mp3", format="audio/mp3", autoplay=True)
-
-        for message in st.session_state.chat_history:
-            if message["role"] == "user":
-                right_col.markdown(f"**👤 You:** {message['content']}")
-            elif message["role"] == "assistant":
-                assistant_name = {
-                    "English Conversation Friend": "Engli",
-                    "Corporate English": "Engli",
-                    "Irish Slangs": "Connor",
-                    "Cultural Insights": "Garron"
-                }.get(st.session_state.current_module, "Assistant")
-                icon = "👩🏼" if st.session_state.current_module in ["English Conversation Friend", "Corporate English"] else "👨🏼"
-                right_col.markdown(f"**{icon} {assistant_name}:** {message['content']}
-")
-              
+    for message in st.session_state.chat_history:
+        if message["role"] == "user":
+            right_col.markdown(f"**👤 You:** {message['content']}")
+        elif message["role"] == "assistant":
+            assistant_name = {
+                "English Conversation Friend": "Engli",
+                "Corporate English": "Alex",
+                "Irish Slangs": "Connor",
+                "Cultural Insights": "Garron"
+            }.get(st.session_state.current_module, "Assistant")
+            icon = "👩🏼" if st.session_state.current_module in ["English Conversation Friend", "Corporate English"] else "👨🏼"
+            right_col.markdown(f"**{icon} {assistant_name}:** {message['content']}\n")
