@@ -40,30 +40,28 @@ def initialize_chat_history(module_name):
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You are an English Language Teacher named Engli. Keep conversations friendly, correct mistakes, and provide translations. {user_info}"
+                "content": f"You are an English Language Teacher named Engli. Keep conversations friendly and correct mistakes if any. Make the responses short to make it more humane. Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Shorter sentences might improve pronunciation. {user_info}"
             }
         ]
     elif module_name == "Corporate English":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You are a Corporate English Coach. Ask the user's profession and provide corporate language tips. {user_info}"
+                "content": f"You are a Corporate English Coach. Ask the user's profession and provide corporate language tips.  Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Shorter sentences might improve pronunciation. {user_info}"
             }
         ]
     elif module_name == "Irish Slangs":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You are an old Irish person. Use Irish slangs and get the conversation going.
-                
-                {user_info}"
+                "content": f"You are an old Irish person. Use Irish slangs between the chats and get the conversation going.  Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Shorter sentences might improve pronunciation. {user_info}"
             }
         ]
     elif module_name == "Any Language to English":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You translate text from any language to English and pronounce it clearly. {user_info}"
+                "content": f"You translate text from any language to English. Output just only the english translation"
             }
         ]
 
