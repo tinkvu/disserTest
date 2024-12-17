@@ -114,7 +114,7 @@ def deepgram_tts(text, output_path="output_audio.mp3", module=None):
         return None
 
 # Streamlit App Interface
-st.title("🎤 English Language Trainer - Engli")
+st.title(f"🎤 {module}")
 
 # Module selection
 module = st.sidebar.selectbox(
