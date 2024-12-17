@@ -7,38 +7,46 @@ from groq import Groq
 import tempfile
 from st_audiorec import st_audiorec
 
-# Enhanced UI Styling
-st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="🌍")
+# Minimalist Black and White Design
+st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="📖")
 
-# Custom CSS
+# Minimalist Black and White CSS
 st.markdown("""
 <style>
 .stApp {
-    background-color: #f0f4f8;
-    color: #2c3e50;
+    background-color: black;
+    color: white;
+}
+body {
+    color: white;
 }
 .stButton>button {
-    background-color: #3498db;
-    color: white;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-}
-.stButton>button:hover {
-    background-color: #2980b9;
-    transform: scale(1.05);
+    background-color: white;
+    color: black;
+    border: 2px solid white;
+    border-radius: 5px;
 }
 .stSidebar {
-    background-color: #e6f2ff;
+    background-color: #0a0a0a;
 }
 .stTextInput>div>div>input {
-    border-radius: 10px;
-    border: 1px solid #3498db;
+    background-color: black;
+    color: white;
+    border: 1px solid white;
 }
 .stContainer {
-    background-color: white;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    background-color: #0a0a0a;
+    border: 1px solid white;
+    color: white;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+}
+.stMarkdown {
+    color: white;
+}
+.stRadio>div>label {
+    color: white !important;
 }
 </style>
 """, unsafe_allow_html=True)
