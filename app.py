@@ -119,7 +119,7 @@ def deepgram_tts(text, output_path="output_audio.mp3", module=None):
 
 # Module selection
 module = st.sidebar.selectbox(
-    "Select a Module", ["English Conversation Friend", "Corporate English", "Irish Slangs", "Any Language to English"]
+    "Select a Module", ["English Conversation Friend", "Corporate English", "Irish Slangs", "Pronunciation Checker"]
 )
 
 # Update the app title based on the selected module
@@ -132,9 +132,9 @@ if "current_module" not in st.session_state or st.session_state.current_module !
 # Left and right columns
 left_col, right_col = st.columns([1, 2])
 
-# Pronunciation feature
-if module == "Any Language to English":
-    left_col.subheader("🔊 Pronunciation Helper")
+# Pronunciation Checker Module
+if module == "Pronunciation Checker":
+    left_col.subheader("🔊 Pronunciation Checker")
     text_to_pronounce = left_col.text_input("Enter text for pronunciation:")
     if text_to_pronounce:
         audio_file = pronounce_text(text_to_pronounce)
@@ -142,28 +142,30 @@ if module == "Any Language to English":
             left_col.audio(audio_file, format="audio/mp3", autoplay=True)
 
 # Audio recording feature
-left_col.subheader("🎙️ Voice Chat")
-left_col.info("**Press record and start speaking!**")
-wav_audio_data = st_audiorec()
+if module != "Pronunciation Checker":
+    left_col.subheader("🎙️ Voice Chat")
+    left_col.info("**Press record and start speaking!**")
+    wav_audio_data = st_audiorec()
 
-# Chat display area
-right_col.subheader("📜 Chat History")
-if wav_audio_data is not None:
-    left_col.success("Recording successful! Transcribing audio...")
-    transcription = transcribe_audio(wav_audio_data)
-    transcription_text = transcription.text
+    # Chat display area
+    right_col.subheader("📜 Chat History")
+    if wav_audio_data is not None:
+        left_col.success("Recording successful! Transcribing audio...")
+        transcription = transcribe_audio(wav_audio_data)
+        transcription_text = transcription.text
 
-    response = generate_response(transcription_text)
-    response_audio_path = deepgram_tts(response, "response_audio.mp3", module)
+        response = generate_response(transcription_text)
+        response_audio_path = deepgram_tts(response, "response_audio.mp3", module)
 
-    if response_audio_path:
-        left_col.audio(response_audio_path, format="audio/mp3", autoplay=True)
+        if response_audio_path:
+            left_col.audio(response_audio_path, format="audio/mp3", autoplay=True)
 
 # Display chat history
-for message in st.session_state.chat_history:
-    if message["role"] == "user":
-        right_col.markdown(f"**👤 You:** {message['content']}")
-    elif message["role"] == "assistant":
-        right_col.markdown(f"**🤖 Engli:** {message['content']}")
-else:
-    left_col.warning("Please record an audio to begin.")
+if module != "Pronunciation Checker":
+    for message in st.session_state.chat_history:
+        if message["role"] == "user":
+            right_col.markdown(f"**👤 You:** {message['content']}")
+        elif message["role"] == "assistant":
+            right_col.markdown(f"**🤖 Engli:** {message['content']}")
+    else:
+        left_col.warning("Please record an audio to begin.")
