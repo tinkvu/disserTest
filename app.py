@@ -18,35 +18,47 @@ deepgram = DeepgramClient(DEEPGRAM_API_KEY)
 # Initialize session state for chat history
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
+if "user_details" not in st.session_state:
+    st.session_state.user_details = {}
+
+# Collect user details
+with st.sidebar.form("user_details_form"):
+    st.header("User Information")
+    st.session_state.user_details["name"] = st.text_input("Your Name:", placeholder="John Doe")
+    st.session_state.user_details["profession"] = st.text_input("Your Profession:", placeholder="Software Engineer")
+    st.session_state.user_details["nationality"] = st.text_input("Your Nationality:", placeholder="American")
+    st.session_state.user_details["age"] = st.number_input("Your Age:", min_value=1, max_value=120, step=1, value=30)
+    submitted = st.form_submit_button("Submit")
 
 # Function to initialize chat history based on module
 def initialize_chat_history(module_name):
+    user_info = f"Name: {st.session_state.user_details['name']}, Profession: {st.session_state.user_details['profession']}, Nationality: {st.session_state.user_details['nationality']}, Age: {st.session_state.user_details['age']}"
     if module_name == "English Conversation Friend":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": "You are an English Language Teacher named Engli. Keep conversations friendly, correct mistakes, and provide translations."
+                "content": f"You are an English Language Teacher named Engli. Keep conversations friendly, correct mistakes, and provide translations. {user_info}"
             }
         ]
     elif module_name == "Corporate English":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": "You are a Corporate English Coach. Ask the user's profession and provide corporate language tips."
+                "content": f"You are a Corporate English Coach. Ask the user's profession and provide corporate language tips. {user_info}"
             }
         ]
     elif module_name == "Irish Slangs":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": "You are an old Irish person. Use Irish slangs and explain them where needed."
+                "content": f"You are an old Irish person. Use Irish slangs and explain them where needed. {user_info}"
             }
         ]
     elif module_name == "Any Language to English":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": "You translate text from any language to English and pronounce it clearly."
+                "content": f"You translate text from any language to English and pronounce it clearly. {user_info}"
             }
         ]
 
