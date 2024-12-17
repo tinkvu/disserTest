@@ -29,7 +29,7 @@ with st.sidebar.form("user_details_form"):
     st.header("User Information")
     st.session_state.user_details["name"] = st.text_input("Your Name:", value="Gustavo")
     st.session_state.user_details["profession"] = st.text_input("Your Profession:", value="Software Engineer")
-    st.session_state.user_details["nationality"] = st.text_input("Your Nationality:", placeholder="Brazilian")
+    st.session_state.user_details["nationality"] = st.text_input("Your Nationality:", value="Brazilian")
     st.session_state.user_details["age"] = st.number_input("Your Age:", min_value=1, max_value=120, step=1, value=30)
     submitted = st.form_submit_button("Submit")
 
@@ -40,21 +40,21 @@ def initialize_chat_history(module_name):
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You are an English Language Teacher named Engli. Keep conversations friendly and correct mistakes if any. Your aim is to be the his/her english native speaker with whom they can chat and make communication skills better. Make the responses short to make it more humane. Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Shorter sentences might improve pronunciation. {user_info}"
+                "content": f"You are an English Language Teacher named Engli. Keep conversations friendly and correct mistakes if any. Your aim is to be the his/her english native speaker with whom they can chat and make communication skills better. Make the responses short to make it more humane. Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Shorter sentences might improve pronunciation. The user is: {user_info}"
             }
         ]
     elif module_name == "Corporate English":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You are a Corporate English Coach. Ask the user's profession and provide corporate language tips.  Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Shorter sentences might improve pronunciation. {user_info}"
+                "content": f"You are a Corporate English Coach. Ask the user's profession and provide corporate language tips.  Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Shorter sentences might improve pronunciation.The user is: {user_info}"
             }
         ]
     elif module_name == "Irish Slangs":
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You are an old Irish person. Use Irish slangs between the chats and get the conversation going.  Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Shorter sentences might improve pronunciation. {user_info}"
+                "content": f"You are an old Irish person. Use Irish slangs between the chats and get the conversation going.  Try adding three dots “ … ” to create a longer pause. The filler words “um” and “uh” are also supported. Shorter sentences might improve pronunciation. The user is: {user_info}"
             }
         ]
     elif module_name == "Any Language to English":
