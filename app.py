@@ -151,6 +151,6 @@ else:
                     "Cultural Insights": "Garron"
                 }.get(st.session_state.current_module, "Assistant")
                 icon = "👩🏼" if st.session_state.current_module in ["English Conversation Friend", "Corporate English"] else "👨🏼"
-right_col.markdown(f"**{icon} {assistant_name}:** {message['content']}
+                right_col.markdown(f"**{icon} {assistant_name}:** {message['content']}
 ")
               
