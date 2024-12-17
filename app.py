@@ -244,6 +244,6 @@ if module != "Pronunciation Checker":
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: gray;'>
-    Made with ❤️ for Language Learners | © 2024 Engli Language Trainer
+    Made with ❤️ for English Language Learners in Ireland
 </div>
 """, unsafe_allow_html=True)
