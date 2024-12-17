@@ -68,7 +68,7 @@ def initialize_chat_history(module_name):
         st.session_state.chat_history = [
             {
                 "role": "system",
-                "content": f"You are a cultural guide in Ireland. Explain Irish culture, customs, and common phrases. Include practical tips for daily life. {user_info}"
+                "content": f"You are a cultural guide in Ireland. Explain Irish culture, customs, and common phrases. Include practical tips for daily life. Make the responses short. {user_info}"
             }
         ]
 
