@@ -114,10 +114,16 @@ def deepgram_tts(text, output_path="output_audio.mp3", module=None):
         return None
 
 # Streamlit App Interface
-st.title(f"🎤 {module}")
+
 
 # Module selection
 module = st.sidebar.selectbox(
+    "Select a Module", ["English Conversation Friend", "Corporate English", "Irish Slangs", "Any Language to English"]
+)
+
+# Update the app title based on the selected module
+st.title(f"🎤 {module}")
+
     "Select a Module", ["English Conversation Friend", "Corporate English", "Irish Slangs", "Any Language to English"]
 )
 if "current_module" not in st.session_state or st.session_state.current_module != module:
