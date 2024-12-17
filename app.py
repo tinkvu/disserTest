@@ -67,7 +67,11 @@ def initialize_chat_history(module_name):
 
 # Reset conversation
 if st.sidebar.button("Reset Conversation"):
-    initialize_chat_history(st.session_state.current_module)
+    if "current_module" in st.session_state:
+        initialize_chat_history(st.session_state.current_module)
+        st.success("Conversation reset successfully!")
+    else:
+        st.warning("Please select a module first.")
 
 # Module selection
 module = st.sidebar.selectbox(
@@ -92,6 +96,9 @@ if module == "Tutorial":
     )
 else:
     if "current_module" not in st.session_state or st.session_state.current_module != module:
+        initialize_chat_history(module)
+        st.session_state.current_module = module
+        st.success("Module changed. Conversation reset!")
         initialize_chat_history(module)
         st.session_state.current_module = module
 
@@ -138,3 +145,4 @@ else:
                 right_col.markdown(f"**👤 You:** {message['content']}")
             elif message["role"] == "assistant":
                 right_col.markdown(f"**🤖 {st.session_state.current_module.split(' ')[0]}:** {message['content']}\n")
+              
