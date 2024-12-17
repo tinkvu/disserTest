@@ -135,7 +135,7 @@ left_col, right_col = st.columns([1, 2])
 # Pronunciation Checker Module
 if module == "Pronunciation Checker":
     left_col.subheader("🔊 Pronunciation Checker")
-    text_to_pronounce = left_col.text_input("Enter text for pronunciation:", placeholder="Dún Laoghaire")
+    text_to_pronounce = left_col.text_input("Enter text for pronunciation:", value="Dún Laoghaire")
     if text_to_pronounce:
         audio_file = pronounce_text(text_to_pronounce)
         if audio_file:
