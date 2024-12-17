@@ -10,46 +10,46 @@ from st_audiorec import st_audiorec
 # Minimalist Black and White Design
 st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="📖")
 
-# Minimalist Black and White CSS
-st.markdown("""
-<style>
-.stApp {
-    background-color: black;
-    color: white;
-}
-body {
-    color: white;
-}
-.stButton>button {
-    background-color: white;
-    color: black;
-    border: 2px solid white;
-    border-radius: 5px;
-}
-.stSidebar {
-    background-color: #0a0a0a;
-}
-.stTextInput>div>div>input {
-    background-color: black;
-    color: white;
-    border: 1px solid white;
-}
-.stContainer {
-    background-color: #0a0a0a;
-    border: 1px solid white;
-    color: white;
-}
-h1, h2, h3, h4, h5, h6 {
-    color: white !important;
-}
-.stMarkdown {
-    color: white;
-}
-.stRadio>div>label {
-    color: white !important;
-}
-</style>
-""", unsafe_allow_html=True)
+# # Minimalist Black and White CSS
+# st.markdown("""
+# <style>
+# .stApp {
+#     background-color: black;
+#     color: white;
+# }
+# body {
+#     color: white;
+# }
+# .stButton>button {
+#     background-color: white;
+#     color: black;
+#     border: 2px solid white;
+#     border-radius: 5px;
+# }
+# .stSidebar {
+#     background-color: #0a0a0a;
+# }
+# .stTextInput>div>div>input {
+#     background-color: black;
+#     color: white;
+#     border: 1px solid white;
+# }
+# .stContainer {
+#     background-color: #0a0a0a;
+#     border: 1px solid white;
+#     color: white;
+# }
+# h1, h2, h3, h4, h5, h6 {
+#     color: white !important;
+# }
+# .stMarkdown {
+#     color: white;
+# }
+# .stRadio>div>label {
+#     color: white !important;
+# }
+# </style>
+# """, unsafe_allow_html=True)
 
 # API Keys (Use environment variables)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
