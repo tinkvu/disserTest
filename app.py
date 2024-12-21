@@ -216,10 +216,7 @@ elif selected_module == "Communication Level Test":
     if "question_number" not in st.session_state:
         st.session_state.question_number = 1
         st.session_state.responses = []
-        st.session_state.questions = random.sample(import random
-
-# Randomly select 10 questions from the pool
-st.session_state.questions = random.sample(QUESTIONS_POOL, k=10)  # Randomly select 10 questions
+        st.session_state.questions = random.sample(QUESTIONS_POOL, k=10)  # Randomly select 10 questions
 
 if st.session_state.question_number <= len(st.session_state.questions):
     current_question = st.session_state.questions[st.session_state.question_number - 1]
