@@ -5,6 +5,7 @@ from gtts import gTTS
 from groq import Groq
 import tempfile
 from st_audiorec import st_audiorec
+import random
 
 # Minimalist Black and White Design
 st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="📖")
@@ -117,6 +118,20 @@ if "user_details" not in st.session_state:
 if "translations" not in st.session_state:
     st.session_state.translations = {}
 
+# Predefined questions for the Communication Level Test
+QUESTIONS_POOL = [
+    "Can you tell me about your favorite hobby?",
+    "Describe your last holiday.",
+    "What would you do if you could live anywhere in the world?",
+    "Explain how to make a cup of tea.",
+    "What are your plans for the weekend?",
+    "Tell me about your favorite book or movie.",
+    "What do you like to do in your free time?",
+    "Describe your typical day.",
+    "What is something new you learned recently?",
+    "If you could meet any historical figure, who would it be and why?"
+]
+
 # Chat History Initialization Function
 def initialize_chat_history(module_name):
     user_info = f"Name: {st.session_state.user_details.get('name', 'User')}, Profession: {st.session_state.user_details.get('profession', 'Unknown')}, Nationality: {st.session_state.user_details.get('nationality', 'Unknown')}, Age: {st.session_state.user_details.get('age', 'Not Specified')}"
@@ -130,7 +145,7 @@ def initialize_chat_history(module_name):
 
         "Any Language to English": "You translate text from any language to English. Output just only the english translation",
 
-        "Communication Level Test": f"You are an English teacher making a test for a student on the communication test assessment. You have to ask 10 questions one by one and check the response correctness in terms of grammar. Ask questions which are a bit hard to answer. The user is: {user_info}"
+        "Communication Level Test": f"You are an English teacher making a test for a student on the communication test assessment. You have to ask 10 questions one by one and check the response correctness in terms of grammar. The user is: {user_info}"
     }
 
     st.session_state.chat_history = [
@@ -196,76 +211,4 @@ if selected_module == "Pronunciation Checker":
             left_col.audio(audio_file, format="audio/mp3", autoplay=True)
 
 elif selected_module == "Communication Level Test":
-    left_col.subheader("\U0001f3eb Communication Level Test")
-
-    if "question_number" not in st.session_state:
-        st.session_state.question_number = 1
-        st.session_state.responses = []
-
-    if st.session_state.question_number <= 10:
-        current_question = f"Question {st.session_state.question_number}:"
-        question_audio_path = deepgram_tts(current_question, output_path=f"question_{st.session_state.question_number}.mp3", module="Communication Level Test")
-
-        if question_audio_path:
-            left_col.audio(question_audio_path, format="audio/mp3", autoplay=True)
-
-        wav_audio_data = st_audiorec()
-
-        if wav_audio_data is not None:
-            with st.spinner('Processing your audio...'):
-                transcription = transcribe_audio(wav_audio_data)
-                if transcription and hasattr(transcription, "text"):
-                    transcription_text = transcription.text
-                    st.session_state.responses.append(transcription_text)
-                    st.session_state.question_number += 1
-    else:
-        evaluation_prompt = "There are 10 questions asked and responses from a student for an English Communication test. Evaluate and give scores by analyzing each and every question and answer in terms of grammar only. Give a score out of 10. Response should be just the score."
-        chat_history_for_evaluation = st.session_state.chat_history + [{"role": "user", "content": resp} for resp in st.session_state.responses]
-        evaluation_response = client.chat.completions.create(
-            model="llama3-8b-8192",
-            messages=chat_history_for_evaluation + [{"role": "system", "content": evaluation_prompt}],
-            max_tokens=10,
-            temperature=0,
-            top_p=1,
-        )
-        score = evaluation_response.choices[0].message.content.strip()
-        left_col.markdown(f"### Your Score: {score} / 10")
-else:
-    with left_col:
-        st.markdown("### \U0001f3a4 Voice Interaction")
-        st.info("**Record and practice your English!**")
-        wav_audio_data = st_audiorec()
-
-        if wav_audio_data is not None:
-            with st.spinner('Processing your audio...'):
-                transcription = transcribe_audio(wav_audio_data)
-                transcription_text = transcription.text
-
-                st.success(f"You said: *{transcription_text}*")
-
-                response, translated_response = generate_response(transcription_text, mother_tongue)
-                response_audio_path = deepgram_tts(response, "response_audio.mp3", selected_module)
-
-                if response_audio_path:
-                    st.audio(response_audio_path, format="audio/mp3", autoplay=True)
-
-    with right_col:
-        st.markdown("### \U0001f4ac Conversation")
-        chat_container = st.container()
-
-        with chat_container:
-            for message in st.session_state.chat_history:
-                if message["role"] == "user":
-                    st.markdown(f"<div style='text-align: right; color: #2980b9;'>\U0001f464 You: {message['content']}</div>", unsafe_allow_html=True)
-                elif message["role"] == "assistant":
-                    st.markdown(f"<div style='text-align: left; color: #27ae60;'>\U0001f916 Engli: {message['content']}</div>", unsafe_allow_html=True)
-                elif message["role"] == "assistant_translated":
-                    st.markdown(f"<div style='text-align: left; color: #27ae60; font-style: italic;'>\U0001f916 Engli (Translated): {message['content']}</div>", unsafe_allow_html=True)
-
-# Footer
-st.markdown("---")
-st.markdown("""
-<div style='text-align: center; color: gray;'>
-    Made with \u2764\ufe0f for English Language Learners in Ireland
-</div>
-""", unsafe_allow_html=True)
+    left_col.sub
