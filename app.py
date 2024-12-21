@@ -60,7 +60,7 @@ def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
         return None
 
 # Function to generate AI response
-def generate_response(text):
+def generate_response(text, target_language):
     try:
         completion = client.chat.completions.create(
             model="llama3-8b-8192",
@@ -73,10 +73,15 @@ def generate_response(text):
         assistant_response = completion.choices[0].message.content
         st.session_state.chat_history.append({"role": "user", "content": text})
         st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
-        return assistant_response
+
+        # Translate the assistant response to the target language
+        translated_response = translate_text(assistant_response, target_language)
+        st.session_state.chat_history.append({"role": "assistant_translated", "content": translated_response})
+
+        return assistant_response, translated_response
     except Exception as e:
         st.error(f"Response generation failed: {e}")
-        return "Sorry, I'm having trouble generating a response right now."
+        return "Sorry, I'm having trouble generating a response right now.", None
 
 # Function to play audio using Deepgram TTS
 def deepgram_tts(text, output_path="output_audio.mp3", module=None):
@@ -179,7 +184,7 @@ else:
 
                 st.success(f"You said: *{transcription_text}*")
 
-                response = generate_response(transcription_text)
+                response, translated_response = generate_response(transcription_text, mother_tongue)
                 response_audio_path = deepgram_tts(response, "response_audio.mp3", selected_module)
 
                 if response_audio_path:
@@ -195,6 +200,8 @@ else:
                     st.markdown(f"<div style='text-align: right; color: #2980b9;'>\U0001f464 You: {message['content']}</div>", unsafe_allow_html=True)
                 elif message["role"] == "assistant":
                     st.markdown(f"<div style='text-align: left; color: #27ae60;'>\U0001f916 Engli: {message['content']}</div>", unsafe_allow_html=True)
+                elif message["role"] == "assistant_translated":
+                    st.markdown(f"<div style='text-align: left; color: #27ae60; font-style: italic;'>\U0001f916 Engli (Translated): {message['content']}</div>", unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")
