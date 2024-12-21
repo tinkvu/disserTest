@@ -130,7 +130,7 @@ def initialize_chat_history(module_name):
 
         "Any Language to English": "You translate text from any language to English. Output just only the english translation",
 
-        "Communication Level Test": f"You are an English teacher making a test for a student on the communication test assessment. You have to ask 10 questions one by one and check the response correctness in terms of grammar. The user is: {user_info}"
+        "Communication Level Test": f"You are an English teacher making a test for a student on the communication test assessment. You have to ask 10 questions one by one and check the response correctness in terms of grammar. Ask questions which are a bit hard to answer. The user is: {user_info}"
     }
 
     st.session_state.chat_history = [
