@@ -203,12 +203,21 @@ elif selected_module == "Communication Level Test":
         st.session_state.responses = []
 
     if st.session_state.question_number <= 10:
-        current_question = f"Question {st.session_state.question_number}: What is your answer to this?"
-        user_response = left_col.text_input(current_question)
+        current_question = f"Question {st.session_state.question_number}:"
+        question_audio_path = deepgram_tts(current_question, output_path=f"question_{st.session_state.question_number}.mp3", module="Communication Level Test")
 
-        if left_col.button("Submit Response"):
-            st.session_state.responses.append(user_response)
-            st.session_state.question_number += 1
+        if question_audio_path:
+            left_col.audio(question_audio_path, format="audio/mp3", autoplay=True)
+
+        wav_audio_data = st_audiorec()
+
+        if wav_audio_data is not None:
+            with st.spinner('Processing your audio...'):
+                transcription = transcribe_audio(wav_audio_data)
+                if transcription and hasattr(transcription, "text"):
+                    transcription_text = transcription.text
+                    st.session_state.responses.append(transcription_text)
+                    st.session_state.question_number += 1
     else:
         evaluation_prompt = "There are 10 questions asked and responses from a student for an English Communication test. Evaluate and give scores by analyzing each and every question and answer in terms of grammar only. Give a score out of 10. Response should be just the score."
         chat_history_for_evaluation = st.session_state.chat_history + [{"role": "user", "content": resp} for resp in st.session_state.responses]
