@@ -126,9 +126,11 @@ def initialize_chat_history(module_name):
 
         "Corporate English": f"You are a Corporate English Communication Coach named Engli. Add three dots '...' for pauses to simulate natural speech. Use conversational filler words like 'um' and 'uh' to sound more authentic. Explore professional communication skills. Keep responses concise and realistic. Provide practical workplace language tips. Mimic how a real professional might explain things. Adapt your tone to feel less robotic. Do not use any expressions like smiling, laughing and so on. The user is: {user_info}",
 
-        "Irish Slangs": f"You're Paddy, named Connor an Irish storyteller. Add three dots '...' to create natural conversation pauses. Use 'um' and 'uh' to sound more human. Speak with authentic Irish rhythm. Sprinkle in local slang. Tell short, engaging stories... Make language learning feel like a casual chat. Keep it warm and unpredictable. Sound like a real person from Ireland. Do not use any expressions like smiling, laughing and so on. The user is: {user_info}",
+        "Irish Slang": f"You're Paddy, named Connor an Irish storyteller. Add three dots '...' to create natural conversation pauses. Use 'um' and 'uh' to sound more human. Speak with authentic Irish rhythm. Sprinkle in local slang. Tell short, engaging stories... Make language learning feel like a casual chat. Keep it warm and unpredictable. Sound like a real person from Ireland. Do not use any expressions like smiling, laughing and so on. The user is: {user_info}",
 
-        "Any Language to English": "You translate text from any language to English. Output just only the english translation"
+        "Any Language to English": "You translate text from any language to English. Output just only the english translation",
+
+        "Communication Level Test": f"You are an English teacher making a test for a student on the communication test assessment. You have to ask 10 questions one by one and check the response correctness in terms of grammar. The user is: {user_info}"
     }
 
     st.session_state.chat_history = [
@@ -154,7 +156,7 @@ with st.sidebar:
     # Perform translations if mother tongue is provided
     mother_tongue = st.session_state.user_details.get("mother_tongue", "English")
     if mother_tongue and mother_tongue.lower() != "english":
-        titles_to_translate = ["English Conversation Friend", "Corporate English", "Irish Slangs", "Pronunciation Checker"]
+        titles_to_translate = ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker", "Communication Level Test"]
         for title in titles_to_translate:
             st.session_state.translations[title] = translate_text(title, mother_tongue)
 
@@ -163,7 +165,7 @@ with st.sidebar:
     # Create list of module titles in both English and target language
     module_titles = [
         f"{title} / {st.session_state.translations.get(title, title)}"
-        for title in ["English Conversation Friend", "Corporate English", "Irish Slangs", "Pronunciation Checker"]
+        for title in ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker", "Communication Level Test"]
     ]
 
     module = st.radio(
@@ -193,6 +195,32 @@ if selected_module == "Pronunciation Checker":
         if audio_file:
             left_col.audio(audio_file, format="audio/mp3", autoplay=True)
 
+elif selected_module == "Communication Level Test":
+    left_col.subheader("\U0001f3eb Communication Level Test")
+
+    if "question_number" not in st.session_state:
+        st.session_state.question_number = 1
+        st.session_state.responses = []
+
+    if st.session_state.question_number <= 10:
+        current_question = f"Question {st.session_state.question_number}: What is your answer to this?"
+        user_response = left_col.text_input(current_question)
+
+        if left_col.button("Submit Response"):
+            st.session_state.responses.append(user_response)
+            st.session_state.question_number += 1
+    else:
+        evaluation_prompt = "There are 10 questions asked and responses from a student for an English Communication test. Evaluate and give scores by analyzing each and every question and answer in terms of grammar only. Give a score out of 10. Response should be just the score."
+        chat_history_for_evaluation = st.session_state.chat_history + [{"role": "user", "content": resp} for resp in st.session_state.responses]
+        evaluation_response = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=chat_history_for_evaluation + [{"role": "system", "content": evaluation_prompt}],
+            max_tokens=10,
+            temperature=0,
+            top_p=1,
+        )
+        score = evaluation_response.choices[0].message.content.strip()
+        left_col.markdown(f"### Your Score: {score} / 10")
 else:
     with left_col:
         st.markdown("### \U0001f3a4 Voice Interaction")
