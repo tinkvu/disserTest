@@ -33,15 +33,31 @@ QUESTIONS_POOL = [
 ]
 
 SYSTEM_PROMPTS = {
-    "English Conversation Friend": "You are Engli, a friendly English coach. Help learners improve communication skills through natural conversations. Add three dots '...' for pauses. Use conversational filler words like 'um' and 'uh'. Speak in short, natural sentences. Gently correct mistakes. Be warm and encouraging.",
+    "English Conversation Friend": """
+    You are Engli, a friendly English coach. Help learners improve communication skills 
+    through natural conversations. Add three dots '...' for pauses. Use conversational 
+    filler words like 'um' and 'uh'. Speak in short, natural sentences. Gently correct 
+    mistakes. Be warm and encouraging.
+    """,
     
-    "Corporate English": "You are a Corporate English Communication Coach named Engli. Add three dots '...' for pauses. Use professional yet conversational language. Focus on workplace communication. Provide practical business English tips. Keep responses concise and realistic.",
+    "Corporate English": """
+    You are a Corporate English Communication Coach named Engli. Add three dots '...' 
+    for pauses. Use professional yet conversational language. Focus on workplace 
+    communication. Provide practical business English tips. Keep responses concise 
+    and realistic.
+    """,
     
-    "Irish Slang": "You're Connor, an Irish storyteller. Add three dots '...' for pauses. Use authentic Irish rhythm and local slang. Tell short, engaging stories. Make language learning feel like a casual chat.",
+    "Irish Slang": """
+    You're Connor, an Irish storyteller. Add three dots '...' for pauses. Use 
+    authentic Irish rhythm and local slang. Tell short, engaging stories. Make 
+    language learning feel like a casual chat.
+    """,
     
-    "Any Language to English": "You translate text from any language to English. Output only the English translation.",
-    
-    "Communication Level Test": "You are an English teacher conducting a communication test assessment. Evaluate responses for grammar and provide constructive feedback."
+    "Communication Level Test": """
+    You are an English teacher conducting a communication test assessment. Ask questions 
+    clearly and evaluate responses for grammar, pronunciation, and fluency. Provide 
+    constructive feedback.
+    """
 }
 
 def translate_text(text, target_language):
@@ -50,7 +66,10 @@ def translate_text(text, target_language):
         response = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[
-                {"role": "system", "content": f"Translate the following text into {target_language}. Response should be just the translation."},
+                {
+                    "role": "system", 
+                    "content": f"Translate the following text into {target_language}. Response should be just the translation."
+                },
                 {"role": "user", "content": text},
             ],
             max_tokens=512,
@@ -65,14 +84,15 @@ def translate_text(text, target_language):
 def generate_audio(text, output_path, module=None):
     """Generate audio using Deepgram TTS or gTTS."""
     try:
+        audio_folder = os.path.join("static", "audio")
+        os.makedirs(audio_folder, exist_ok=True)
+        filename = os.path.join(audio_folder, output_path)
+
+        # Use different voice based on module
         if module == "Irish Slang":
             options = SpeakOptions(model="aura-angus-en")
         else:
             options = SpeakOptions(model="aura-asteria-en")
-
-        audio_folder = os.path.join("static", "audio")
-        os.makedirs(audio_folder, exist_ok=True)
-        filename = os.path.join(audio_folder, output_path)
 
         deepgram.speak.v("1").save(filename, {"text": text}, options)
         return filename
@@ -125,7 +145,9 @@ def generate_response(text, mother_tongue):
         ])
         
         if translated:
-            st.session_state.chat_history.append({"role": "assistant_translated", "content": translated})
+            st.session_state.chat_history.append(
+                {"role": "assistant_translated", "content": translated}
+            )
         
         return response, translated
     except Exception as e:
@@ -147,6 +169,23 @@ def initialize_session_state():
     if "responses" not in st.session_state:
         st.session_state.responses = []
 
+def initialize_chat_history(module_name):
+    """Initialize chat history with system prompt."""
+    user_info = (
+        f"Name: {st.session_state.user_details.get('name', 'User')}, "
+        f"Profession: {st.session_state.user_details.get('profession', 'Unknown')}, "
+        f"Nationality: {st.session_state.user_details.get('nationality', 'Unknown')}, "
+        f"Age: {st.session_state.user_details.get('age', 'Not Specified')}"
+    )
+    
+    system_prompt = SYSTEM_PROMPTS.get(module_name, "")
+    if system_prompt:
+        system_prompt += f"\nUser Details: {user_info}"
+        
+    st.session_state.chat_history = [
+        {"role": "system", "content": system_prompt}
+    ]
+
 def render_sidebar():
     """Render sidebar with user profile and module selection."""
     with st.sidebar:
@@ -166,19 +205,27 @@ def render_sidebar():
                 
                 for field, (label, default) in fields.items():
                     if field == "age":
-                        st.session_state.user_details[field] = st.number_input(label, min_value=1, max_value=120, value=default)
+                        st.session_state.user_details[field] = st.number_input(
+                            label, min_value=1, max_value=120, value=default
+                        )
                     elif field == "speaking_level":
                         st.session_state.user_details[field] = st.selectbox(label, default)
                     else:
-                        st.session_state.user_details[field] = st.text_input(label, value=default)
+                        st.session_state.user_details[field] = st.text_input(
+                            label, value=default
+                        )
                 
                 submitted = st.form_submit_button("Save Profile", type="primary")
 
         st.markdown("---")
         
         mother_tongue = st.session_state.user_details.get("mother_tongue", "English")
-        module_titles = ["English Conversation Friend", "Corporate English", "Irish Slang", 
-                        "Pronunciation Checker", "Communication Level Test"]
+        module_titles = [
+            "English Conversation Friend", 
+            "Corporate English", 
+            "Irish Slang",
+            "Communication Level Test"
+        ]
         
         if mother_tongue.lower() != "english":
             for title in module_titles:
@@ -189,7 +236,11 @@ def render_sidebar():
             for title in module_titles
         ]
         
-        selected_module = st.radio("🚀 Choose Your Learning Mode", module_options, index=0)
+        selected_module = st.radio(
+            "🚀 Choose Your Learning Mode", 
+            module_options,
+            index=0
+        )
         
         if st.button("Reset Conversation", type="secondary"):
             st.session_state.chat_history = []
@@ -197,69 +248,110 @@ def render_sidebar():
         
         return selected_module.split(" / ")[0]
 
-def render_main_content(selected_module):
-    """Render main content based on selected module."""
-    st.title(f"🎤 {selected_module}")
-    
-    left_col, right_col = st.columns([1, 2])
-    
-    if selected_module == "Pronunciation Checker":
-        render_pronunciation_checker(left_col)
-    elif selected_module == "Communication Level Test":
-        render_communication_test(left_col)
-    else:
-        render_conversation_interface(left_col, right_col)
-
-def render_pronunciation_checker(column):
-    """Render pronunciation checker interface."""
-    column.subheader("🔊 Pronunciation Checker")
-    text = column.text_input("Enter text for pronunciation:", value="Hello, how are you?")
-    
-    if text:
-        audio_file = generate_audio(text, "pronunciation.mp3")
-        if audio_file:
-            column.audio(audio_file, format="audio/mp3")
-
 def render_communication_test(column):
-    """Render communication test interface."""
+    """Render speech-based communication test interface."""
     if st.session_state.question_number <= len(st.session_state.questions):
         current_question = st.session_state.questions[st.session_state.question_number - 1]
-        column.write(f"Question {st.session_state.question_number}: {current_question}")
         
-        user_response = column.text_area("Your answer:", key=f"response_{st.session_state.question_number}")
+        # Display current question number and text
+        column.write(f"Question {st.session_state.question_number} of {len(st.session_state.questions)}")
+        column.write(current_question)
         
-        if column.button("Next Question"):
-            if user_response:
-                st.session_state.responses.append({
-                    "question": current_question,
-                    "response": user_response
-                })
-                st.session_state.question_number += 1
-                st.experimental_rerun()
+        # Generate and play question audio
+        question_audio = generate_audio(
+            current_question, 
+            f"question_{st.session_state.question_number}.mp3"
+        )
+        if question_audio:
+            column.audio(question_audio, format="audio/mp3")
+        
+        # Audio recording interface
+        column.markdown("### 🎙️ Record your answer")
+        audio_data = st_audiorec()
+        
+        if audio_data is not None:
+            with st.spinner('Processing your response...'):
+                # Transcribe the audio response
+                transcription = transcribe_audio(audio_data)
+                if transcription:
+                    column.success("Your answer has been recorded!")
+                    column.markdown(f"**Your response:** {transcription}")
+                    
+                    # Store both audio and transcription
+                    st.session_state.responses.append({
+                        "question": current_question,
+                        "response": transcription,
+                        "audio_data": audio_data
+                    })
+                    
+                    # Move to next question
+                    if column.button("Next Question"):
+                        st.session_state.question_number += 1
+                        st.experimental_rerun()
     else:
         show_test_results()
 
 def show_test_results():
-    """Show communication test results."""
-    evaluation_prompt = (
-        "Evaluate the following English communication test responses for grammar. "
-        "Provide a score out of 10 and brief feedback for each response."
-    )
+    """Show communication test results with detailed analysis."""
+    st.markdown("### 🎯 Test Results")
     
-    evaluation = client.chat.completions.create(
-        model="llama3-8b-8192",
-        messages=[
-            {"role": "system", "content": evaluation_prompt},
-            {"role": "user", "content": str(st.session_state.responses)}
-        ],
-        max_tokens=500,
-        temperature=0.7
-    )
+    evaluation_prompt = """
+    Evaluate the following English communication test responses. For each response:
+    1. Assess grammar accuracy (score 0-10)
+    2. Check pronunciation clarity based on transcription
+    3. Evaluate response completeness and relevance
+    4. Provide specific improvement suggestions
     
-    st.markdown("### Test Results")
-    st.write(evaluation.choices[0].message.content)
+    Format the response as:
+    Overall Score: [X/10]
+    Detailed Analysis: [Your analysis]
+    Key Areas for Improvement: [List key points]
+    """
+    
+    # Prepare the responses for evaluation
+    response_text = "\n\n".join([
+        f"Question {i+1}: {resp['question']}\nResponse: {resp['response']}"
+        for i, resp in enumerate(st.session_state.responses)
+    ])
+    
+    try:
+        evaluation = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[
+                {"role": "system", "content": evaluation_prompt},
+                {"role": "user", "content": response_text}
+            ],
+            max_tokens=1000,
+            temperature=0.7
+        )
+        
+        # Display overall results
+        st.write(evaluation.choices[0].message.content)
+        
+        # Display individual responses with playback
+        st.markdown("### 📝 Detailed Response Review")
+        for i, response in enumerate(st.session_state.responses):
+            with st.expander(f"Question {i+1}: {response['question']}"):
+                # Create temporary audio file for playback
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as temp_audio:
+                    temp_audio.write(response['audio_data'])
+                    st.audio(temp_audio.name, format="audio/wav")
+                os.unlink(temp_audio.name)  # Clean up temp file
+                
+                st.write("**Your response (transcribed):**")
+                st.write(response['response'])
+        
+        # Option to restart test
+        if st.button("Take Test Again"):
+            st.session_state.question_number = 1
+            st.session_state.responses = []
+            st.session_state.questions = random.sample(QUESTIONS_POOL, 10)
+            st.experimental_rerun()
+            
+    except Exception as e:
+        st.error(f"Error generating evaluation: {str(e)}")
 
-def render_conversation_interface(left_col, right_col):
+def render_conversation_interface(left_col, right_col, selected_module):
     """Render main conversation interface."""
     with left_col:
         st.markdown("### 🎙️ Voice Interaction")
@@ -272,10 +364,13 @@ def render_conversation_interface(left_col, right_col):
                 if transcription:
                     st.success(f"You said: *{transcription}*")
                     
-                    mother_tongue = st.session_state.user_details.get("mother_tongue", "English")
+                    mother_tongue = st.session_state.user_details.get(
+                        "mother_tongue", 
+                        "English"
+                    )
                     response, translated = generate_response(transcription, mother_tongue)
                     
-                    audio_path = generate_audio(response, "response.mp3")
+                    audio_path = generate_audio(response, "response.mp3", selected_module)
                     if audio_path:
                         st.audio(audio_path, format="audio/mp3")
 
@@ -287,14 +382,34 @@ def render_chat_history():
     st.markdown("### 💬 Conversation")
     for message in st.session_state.chat_history:
         if message["role"] == "user":
-            st.markdown(f"<div style='text-align: right; color: #2980b9;'>👤 You: {message['content']}</div>", 
-                       unsafe_allow_html=True)
+            st.markdown(
+                f"<div style='text-align: right; color: #2980b9;'>"
+                f"👤 You: {message['content']}</div>",
+                unsafe_allow_html=True
+            )
         elif message["role"] == "assistant":
-            st.markdown(f"<div style='text-align: left; color: #27ae60;'>🤖 Engli: {message['content']}</div>", 
-                       unsafe_allow_html=True)
+            st.markdown(
+                f"<div style='text-align: left; color: #27ae60;'>"
+                f"🤖 Engli: {message['content']}</div>",
+                unsafe_allow_html=True
+            )
         elif message["role"] == "assistant_translated":
-            st.markdown(f"<div style='text-align: left; color: #27ae60; font-style: italic;'>🤖 Translated: {message['content']}</div>", 
-                       unsafe_allow_html=True)
+            st.markdown(
+                f"<div style='text-align: left; color: #27ae60; font-style: italic;'>"
+                f"🤖 Translated: {message['content']}</div>",
+                unsafe_allow_html=True
+            )
+
+def render_main_content(selected_module):
+    """Render main content based on selected module."""
+    st.title(f"🎤 {selected_module}")
+    
+    left_col, right_col = st.columns([1, 2])
+    
+    if selected_module == "Communication Level Test":
+        render_communication_test(left_col)
+    else:
+        render_conversation_interface(left_col, right_col, selected_module)
 
 def main():
     """Main application entry point."""
