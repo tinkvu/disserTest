@@ -62,6 +62,10 @@ def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
 # Function to generate AI response
 def generate_response(text, target_language):
     try:
+        if len(st.session_state.chat_history) == 0:
+            # Add system initialization to chat history
+            st.session_state.chat_history.append({"role": "system", "content": "You are Engli, an AI English trainer."})
+
         completion = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=st.session_state.chat_history + [{"role": "user", "content": text}],
@@ -113,6 +117,24 @@ if "user_details" not in st.session_state:
 if "translations" not in st.session_state:
     st.session_state.translations = {}
 
+# Chat History Initialization Function
+def initialize_chat_history(module_name):
+    user_info = f"Name: {st.session_state.user_details.get('name', 'User')}, Profession: {st.session_state.user_details.get('profession', 'Unknown')}, Nationality: {st.session_state.user_details.get('nationality', 'Unknown')}, Age: {st.session_state.user_details.get('age', 'Not Specified')}"
+
+    system_prompts = {
+        "English Conversation Friend": f"You are Engli, a friendly English coach. Help learners improve communication skills through natural conversations. Add three dots '...' for pauses to make responses feel more human. Use conversational filler words like 'um' and 'uh'. Speak in short, natural sentences. Gently correct mistakes. Vary your speech pattern to sound authentic. Be warm and encouraging. Create a comfortable learning environment. Do not use any expressions like smiling, laughing and so on. Talk about the day, or anything as a casual friend. The user is: {user_info}",
+
+        "Corporate English": f"You are a Corporate English Communication Coach named Engli. Add three dots '...' for pauses to simulate natural speech. Use conversational filler words like 'um' and 'uh' to sound more authentic. Explore professional communication skills. Keep responses concise and realistic. Provide practical workplace language tips. Mimic how a real professional might explain things. Adapt your tone to feel less robotic. Do not use any expressions like smiling, laughing and so on. The user is: {user_info}",
+
+        "Irish Slangs": f"You're Paddy, named Connor an Irish storyteller. Add three dots '...' to create natural conversation pauses. Use 'um' and 'uh' to sound more human. Speak with authentic Irish rhythm. Sprinkle in local slang. Tell short, engaging stories... Make language learning feel like a casual chat. Keep it warm and unpredictable. Sound like a real person from Ireland. Do not use any expressions like smiling, laughing and so on. The user is: {user_info}",
+
+        "Any Language to English": "You translate text from any language to English. Output just only the english translation"
+    }
+
+    st.session_state.chat_history = [
+        {"role": "system", "content": system_prompts.get(module_name, "")}
+    ]
+
 # Sidebar Layout
 with st.sidebar:
     st.markdown("## 🌍 Engli Language Trainer")
@@ -153,7 +175,7 @@ with st.sidebar:
 
     # Reset Chat History Button
     if st.button("Reset Conversation", type="secondary"):
-        st.session_state.chat_history = []
+        initialize_chat_history(module.split(" / ")[0])
 
 # Main App Title
 selected_module = module.split(" / ")[0]  # Extract English title for processing
@@ -195,7 +217,7 @@ else:
         chat_container = st.container()
 
         with chat_container:
-            for message in st.session_state.chat_history[1:]:
+            for message in st.session_state.chat_history:
                 if message["role"] == "user":
                     st.markdown(f"<div style='text-align: right; color: #2980b9;'>\U0001f464 You: {message['content']}</div>", unsafe_allow_html=True)
                 elif message["role"] == "assistant":
