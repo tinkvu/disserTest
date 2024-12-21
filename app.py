@@ -211,4 +211,85 @@ if selected_module == "Pronunciation Checker":
             left_col.audio(audio_file, format="audio/mp3", autoplay=True)
 
 elif selected_module == "Communication Level Test":
-    left_col.sub
+    left_col.subheader("\U0001f3eb Communication Level Test")
+
+    if "question_number" not in st.session_state:
+        st.session_state.question_number = 1
+        st.session_state.responses = []
+        st.session_state.questions = random.sample(QUESTIONS_POOL, k=10)  # Randomly select 10 questions
+
+    if st.session_state.question_number <= len(st.session_state.questions):
+        current_question = st.session_state.questions[st.session_state.question_number - 1]
+        question_audio_path = deepgram_tts(current_question, output_path=f"question_{st.session_state.question_number}.mp3", module="Communication Level Test")
+
+        if question_audio_path:
+            left_col.audio(question_audio_path, format="audio/mp3", autoplay=True)
+
+        wav_audio_data = st_audiorec()
+
+        if wav_audio_data is not None:
+            with st.spinner('Processing your audio...'):
+                transcription = transcribe_audio(wav_audio_data)
+                if transcription and hasattr(transcription, "text"):
+                    transcription_text = transcription.text
+                    st.session_state.responses.append({"question": current_question, "response": transcription_text})
+                    st.session_state.question_number += 1
+    else:
+        evaluation_prompt = (
+            "There are 10 questions asked and responses from a student for an English Communication test. "
+            "Evaluate and give scores by analyzing each and every question and answer in terms of grammar only. "
+            "Give a score out of 10. Response should be just the score."
+        )
+        chat_history_for_evaluation = st.session_state.chat_history + [
+            {"role": "user", "content": f"Q: {entry['question']} A: {entry['response']}"} for entry in st.session_state.responses
+        ]
+        evaluation_response = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=chat_history_for_evaluation + [{"role": "system", "content": evaluation_prompt}],
+            max_tokens=10,
+            temperature=0,
+            top_p=1,
+        )
+        score = evaluation_response.choices[0].message.content.strip()
+        left_col.markdown(f"### Your Score: {score} / 10")
+
+else:
+    with left_col:
+        st.markdown("### 🎙️ Voice Interaction")
+        st.info("**Record and practice your English!**")
+        wav_audio_data = st_audiorec()
+
+        if wav_audio_data is not None:
+            with st.spinner('Processing your audio...'):
+                transcription = transcribe_audio(wav_audio_data)
+                transcription_text = transcription.text
+
+                st.success(f"You said: *{transcription_text}*")
+
+                response, translated_response = generate_response(transcription_text, mother_tongue)
+                response_audio_path = deepgram_tts(response, "response_audio.mp3", selected_module)
+
+                if response_audio_path:
+                    st.audio(response_audio_path, format="audio/mp3", autoplay=True)
+
+    with right_col:
+        st.markdown("### 💬 Conversation")
+        chat_container = st.container()
+
+        with chat_container:
+            for message in st.session_state.chat_history:
+                if message["role"] == "user":
+                    st.markdown(f"<div style='text-align: right; color: #2980b9;'>👤 You: {message['content']}</div>", unsafe_allow_html=True)
+                elif message["role"] == "assistant":
+                    st.markdown(f"<div style='text-align: left; color: #27ae60;'>🤖 Engli: {message['content']}</div>", unsafe_allow_html=True)
+                elif message["role"] == "assistant_translated":
+                    st.markdown(f"<div style='text-align: left; color: #27ae60; font-style: italic;'>🤖 Engli (Translated): {message['content']}</div>", unsafe_allow_html=True)
+
+# Footer
+st.markdown("---")
+st.markdown("""
+<div style='text-align: center; color: gray;'>
+    Made with ❤️ for English Language Learners in Ireland
+</div>
+""", unsafe_allow_html=True)
+
