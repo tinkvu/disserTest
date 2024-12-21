@@ -219,40 +219,26 @@ elif selected_module == "Communication Level Test":
         st.session_state.questions = random.sample(QUESTIONS_POOL, k=10)  # Randomly select 10 questions
 
 if st.session_state.question_number <= len(st.session_state.questions):
-    current_question = st.session_state.questions[st.session_state.question_number - 1]
-    question_audio_path = deepgram_tts(current_question, output_path=f"question_{st.session_state.question_number}.mp3", module="Communication Level Test")
-
-    if question_audio_path:
-        left_col.audio(question_audio_path, format="audio/mp3", autoplay=True)
-
-    wav_audio_data = st_audiorec()
-
-    if wav_audio_data is not None:
-        with st.spinner('Processing your audio...'):
-            transcription = transcribe_audio(wav_audio_data)
-            if transcription and hasattr(transcription, "text"):
-                transcription_text = transcription.text
-                st.session_state.responses.append({"question": current_question, "response": transcription_text})
-                st.session_state.question_number += 1
-                st.experimental_rerun()  # Force the interface to refresh and move to the next question
+    # Logic for current question processing
 else:
     evaluation_prompt = (
         "There are 10 questions asked and responses from a student for an English Communication test. "
         "Evaluate and give scores by analyzing each and every question and answer in terms of grammar only. "
         "Give a score out of 10. Response should be just the score."
     )
-    chat_history_for_evaluation = st.session_state.chat_history + [
-        {"role": "user", "content": f"Q: {entry['question']} A: {entry['response']}"} for entry in st.session_state.responses
-    ]
     evaluation_response = client.chat.completions.create(
         model="llama3-8b-8192",
-        messages=chat_history_for_evaluation + [{"role": "system", "content": evaluation_prompt}],
+        messages=[
+            {"role": "user", "content": f"Q: {entry['question']} A: {entry['response']}"}
+            for entry in st.session_state.responses
+        ] + [{"role": "system", "content": evaluation_prompt}],
         max_tokens=10,
         temperature=0,
         top_p=1,
     )
     score = evaluation_response.choices[0].message.content.strip()
-    left_col.markdown(f"### Your Score: {score} / 10")
+    st.markdown(f"### Your Score: {score} / 10")
+
 
 else:
     with left_col:
