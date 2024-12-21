@@ -23,7 +23,7 @@ def translate_text(text, target_language):
         response = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[
-                {"role": "system", "content": "Translate the following text into " + target_language + "."},
+                {"role": "system", "content": "Translate the following text into " + target_language + ". Response should be just only the translation."},
                 {"role": "user", "content": text},
             ],
             max_tokens=512,
@@ -119,7 +119,7 @@ with st.sidebar:
             st.session_state.user_details["age"] = st.number_input("Your Age:", min_value=1, max_value=120, step=1, value=30)
             st.session_state.user_details["profession"] = st.text_input("Your Profession:", value="Software Engineer")
             st.session_state.user_details["nationality"] = st.text_input("Your Nationality:", value="Brazilian")
-            st.session_state.user_details["mother_tongue"] = st.text_input("Your Mother Tongue:", value="Spanish")
+            st.session_state.user_details["mother_tongue"] = st.text_input("Your Mother Tongue:", value="Portugese")
             st.session_state.user_details["speaking_level"] = st.selectbox("English Speaking Level:", ["Beginner", "Intermediate", "Advanced"])
 
             submitted = st.form_submit_button("Save Profile", type="primary")
@@ -133,9 +133,15 @@ with st.sidebar:
 
     st.markdown("---")
 
+    # Create list of module titles in both English and target language
+    module_titles = [
+        f"{title} / {st.session_state.translations.get(title, title)}"
+        for title in ["English Conversation Friend", "Corporate English", "Irish Slangs", "Pronunciation Checker"]
+    ]
+
     module = st.radio(
         "🚀 Choose Your Learning Mode",
-        ["English Conversation Friend", "Corporate English", "Irish Slangs", "Pronunciation Checker"],
+        module_titles,
         index=0,
         help="Select the type of English learning experience you want"
     )
@@ -145,13 +151,14 @@ with st.sidebar:
         st.session_state.chat_history = []
 
 # Main App Title
-translated_module = st.session_state.translations.get(module, module)
-st.title(f"🎤 {translated_module}")
+selected_module = module.split(" / ")[0]  # Extract English title for processing
+translated_module = st.session_state.translations.get(selected_module, selected_module)
+st.title(f"🎤 {selected_module} / {translated_module}")
 
 # Interaction Modules
 left_col, right_col = st.columns([1, 2])
 
-if module == "Pronunciation Checker":
+if selected_module == "Pronunciation Checker":
     left_col.subheader("\U0001f50a Pronunciation Checker")
     text_to_pronounce = left_col.text_input("Enter text for pronunciation:", value="D\u00fan Laoghaire")
     if text_to_pronounce:
@@ -173,7 +180,7 @@ else:
                 st.success(f"You said: *{transcription_text}*")
 
                 response = generate_response(transcription_text)
-                response_audio_path = deepgram_tts(response, "response_audio.mp3", module)
+                response_audio_path = deepgram_tts(response, "response_audio.mp3", selected_module)
 
                 if response_audio_path:
                     st.audio(response_audio_path, format="audio/mp3", autoplay=True)
