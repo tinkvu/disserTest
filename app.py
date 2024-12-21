@@ -287,9 +287,70 @@ def render_communication_test(column):
                     # Move to next question
                     if column.button("Next Question"):
                         st.session_state.question_number += 1
-                        st.experimental_rerun()
+                        st.rerun()  # Updated from experimental_rerun to rerun
     else:
         show_test_results()
+
+
+def show_test_results():
+    """Show communication test results with detailed analysis."""
+    st.markdown("### 🎯 Test Results")
+    
+    evaluation_prompt = """
+    Evaluate the following English communication test responses. For each response:
+    1. Assess grammar accuracy (score 0-10)
+    2. Check pronunciation clarity based on transcription
+    3. Evaluate response completeness and relevance
+    4. Provide specific improvement suggestions
+    
+    Format the response as:
+    Overall Score: [X/10]
+    Detailed Analysis: [Your analysis]
+    Key Areas for Improvement: [List key points]
+    """
+    
+    # Prepare the responses for evaluation
+    response_text = "\n\n".join([
+        f"Question {i+1}: {resp['question']}\nResponse: {resp['response']}"
+        for i, resp in enumerate(st.session_state.responses)
+    ])
+    
+    try:
+        evaluation = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[
+                {"role": "system", "content": evaluation_prompt},
+                {"role": "user", "content": response_text}
+            ],
+            max_tokens=1000,
+            temperature=0.7
+        )
+        
+        # Display overall results
+        st.write(evaluation.choices[0].message.content)
+        
+        # Display individual responses with playback
+        st.markdown("### 📝 Detailed Response Review")
+        for i, response in enumerate(st.session_state.responses):
+            with st.expander(f"Question {i+1}: {response['question']}"):
+                # Create temporary audio file for playback
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as temp_audio:
+                    temp_audio.write(response['audio_data'])
+                    st.audio(temp_audio.name, format="audio/wav")
+                os.unlink(temp_audio.name)  # Clean up temp file
+                
+                st.write("**Your response (transcribed):**")
+                st.write(response['response'])
+        
+        # Option to restart test
+        if st.button("Take Test Again"):
+            st.session_state.question_number = 1
+            st.session_state.responses = []
+            st.session_state.questions = random.sample(QUESTIONS_POOL, 10)
+            st.rerun()  # Updated from experimental_rerun to rerun
+            
+    except Exception as e:
+        st.error(f"Error generating evaluation: {str(e)}")
 
 def show_test_results():
     """Show communication test results with detailed analysis."""
