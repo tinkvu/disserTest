@@ -164,17 +164,19 @@ with st.sidebar:
     # Perform translations if mother tongue is provided
     if mother_tongue.lower() != "english":
         base_modules = ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker"]
-        titles_to_translate = base_modules + [translation_module_name]
+        titles_to_translate = base_modules  # Remove translation module from translation list
         for title in titles_to_translate:
             st.session_state.translations[title] = translate_text(title, mother_tongue)
 
     st.markdown("---")
 
-    # Create list of module titles in both English and target language
-    module_titles = [
+    # Create list of module titles - special handling for translation module
+    base_modules = [
         f"{title} / {st.session_state.translations.get(title, title)}"
-        for title in ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker", translation_module_name]
+        for title in ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker"]
     ]
+    # Add translation module without translation
+    module_titles = base_modules + [translation_module_name]
 
     module = st.radio(
         "🚀 Choose Your Learning Mode",
@@ -185,12 +187,16 @@ with st.sidebar:
 
     # Reset Chat History Button
     if st.button("Reset Conversation", type="secondary"):
-        initialize_chat_history(module.split(" / ")[0])
+        initialize_chat_history(module.split(" / ")[0] if "/" in module else module)
 
 # Main App Title
-selected_module = module.split(" / ")[0]  # Extract English title for processing
-translated_module = st.session_state.translations.get(selected_module, selected_module)
-st.title(f"🎤 {selected_module} / {translated_module}")
+selected_module = module.split(" / ")[0] if "/" in module else module  # Handle both formats
+# Only translate title for non-translation modules
+if selected_module != translation_module_name:
+    translated_module = st.session_state.translations.get(selected_module, selected_module)
+    st.title(f"🎤 {selected_module} / {translated_module}")
+else:
+    st.title(f"🎤 {selected_module}")
 
 # Interaction Modules
 left_col, right_col = st.columns([1, 2])
