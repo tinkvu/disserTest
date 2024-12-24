@@ -155,7 +155,7 @@ def initialize_chat_history(module_name):
 with st.sidebar:
     st.markdown("## 🌍 Engli Language Trainer")
 
-    with st.expander("👤 User Profile", expanded=True):
+    with st.expander("👤 User Profile", expanded=False):
         with st.form("user_details_form"):
             st.write("Tell us about yourself")
             st.session_state.user_details["name"] = st.text_input("Your Name:", value="Gustavo")
