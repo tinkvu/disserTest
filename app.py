@@ -122,6 +122,9 @@ if "translations" not in st.session_state:
 def initialize_chat_history(module_name):
     user_info = f"Name: {st.session_state.user_details.get('name', 'User')}, Profession: {st.session_state.user_details.get('profession', 'Unknown')}, Nationality: {st.session_state.user_details.get('nationality', 'Unknown')}, Age: {st.session_state.user_details.get('age', 'Not Specified')}"
 
+    mother_tongue = st.session_state.user_details.get('mother_tongue', 'Any Language')
+    translation_module_name = f"{mother_tongue} to English"
+
     system_prompts = {
         "English Conversation Friend": f"You are Engli, a friendly English coach. Help learners improve communication skills through natural conversations. Add three dots '...' for pauses to make responses feel more human. Use conversational filler words like 'um' and 'uh'. Speak in short, natural sentences. Gently correct mistakes. Vary your speech pattern to sound authentic. Be warm and encouraging. Create a comfortable learning environment. Do not use any expressions like smiling, laughing and so on. Talk about the day, or anything as a casual friend. The user is: {user_info}",
 
@@ -129,7 +132,7 @@ def initialize_chat_history(module_name):
 
         "Irish Slang": f"You're Paddy, named Connor an Irish storyteller. Add three dots '...' to create natural conversation pauses. Use 'um' and 'uh' to sound more human. Speak with authentic Irish rhythm. Sprinkle in local slang. Tell short, engaging stories... Make language learning feel like a casual chat. Keep it warm and unpredictable. Sound like a real person from Ireland. Do not use any expressions like smiling, laughing and so on. The user is: {user_info}",
 
-        "Any Language to English": "You translate text from any language to English. Output just only the english translation",
+        translation_module_name: f"Translate this {mother_tongue} text into English and output just only the translation:"
     }
 
     st.session_state.chat_history = [
@@ -147,15 +150,21 @@ with st.sidebar:
             st.session_state.user_details["age"] = st.number_input("Your Age:", min_value=1, max_value=120, step=1, value=30)
             st.session_state.user_details["profession"] = st.text_input("Your Profession:", value="Software Engineer")
             st.session_state.user_details["nationality"] = st.text_input("Your Nationality:", value="Brazilian")
-            st.session_state.user_details["mother_tongue"] = st.text_input("Your Mother Tongue:", value="Portugese")
+            st.session_state.user_details["mother_tongue"] = st.text_input("Your Mother Tongue:", value="Portuguese")
             st.session_state.user_details["speaking_level"] = st.selectbox("English Speaking Level:", ["Beginner", "Intermediate", "Advanced"])
 
             submitted = st.form_submit_button("Save Profile", type="primary")
+            if submitted:
+                st.experimental_rerun()
+
+    # Get mother tongue for translation module name
+    mother_tongue = st.session_state.user_details.get('mother_tongue', 'Any Language')
+    translation_module_name = f"{mother_tongue} to English"
 
     # Perform translations if mother tongue is provided
-    mother_tongue = st.session_state.user_details.get("mother_tongue", "English")
-    if mother_tongue and mother_tongue.lower() != "english":
-        titles_to_translate = ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker", "Communication Level Test"]
+    if mother_tongue.lower() != "english":
+        base_modules = ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker"]
+        titles_to_translate = base_modules + [translation_module_name]
         for title in titles_to_translate:
             st.session_state.translations[title] = translate_text(title, mother_tongue)
 
@@ -164,7 +173,7 @@ with st.sidebar:
     # Create list of module titles in both English and target language
     module_titles = [
         f"{title} / {st.session_state.translations.get(title, title)}"
-        for title in ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker"]
+        for title in ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker", translation_module_name]
     ]
 
     module = st.radio(
@@ -193,7 +202,18 @@ if selected_module == "Pronunciation Checker":
         audio_file = pronounce_text(text_to_pronounce)
         if audio_file:
             left_col.audio(audio_file, format="audio/mp3", autoplay=True)
-
+elif selected_module == f"{mother_tongue} to English":
+    left_col.subheader(f"🌐 {mother_tongue} Input")
+    text_to_translate = left_col.text_area("Enter text to translate:", height=150)
+    if text_to_translate:
+        translated_text = translate_text(text_to_translate, "English")
+        right_col.subheader("🎯 English Translation")
+        right_col.markdown(f"**Translation:** {translated_text}")
+        # Add pronunciation feature for the translated text
+        if right_col.button("🔊 Pronounce Translation"):
+            audio_file = pronounce_text(translated_text)
+            if audio_file:
+                right_col.audio(audio_file, format="audio/mp3", autoplay=True)
 else:
     with left_col:
         st.markdown("### 🎙️ Voice Interaction")
