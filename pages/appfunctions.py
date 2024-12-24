@@ -220,18 +220,18 @@ if selected_module == "Pronunciation Checker":
         audio_file = pronounce_text(text_to_pronounce)
         if audio_file:
             left_col.audio(audio_file, format="audio/mp3", autoplay=True)
-elif selected_module == f"{mother_tongue} to English":
-    left_col.subheader(f"🌐 {mother_tongue} Input")
-    text_to_translate = left_col.text_area("Enter text to translate:", height=150)
-    if text_to_translate:
-        translated_text = translate_text(text_to_translate, "English")
-        right_col.subheader("🎯 English Translation")
-        right_col.markdown(f"**Translation:** {translated_text}")
-        # Add pronunciation feature for the translated text
-        if right_col.button("🔊 Pronounce Translation"):
-            audio_file = pronounce_text(translated_text)
-            if audio_file:
-                right_col.audio(audio_file, format="audio/mp3", autoplay=True)
+# elif selected_module == f"{mother_tongue} to English":
+#     left_col.subheader(f"🌐 {mother_tongue} Input")
+#     text_to_translate = left_col.text_area("Enter text to translate:", height=150)
+#     if text_to_translate:
+#         translated_text = translate_text(text_to_translate, "English")
+#         right_col.subheader("🎯 English Translation")
+#         right_col.markdown(f"**Translation:** {translated_text}")
+#         # Add pronunciation feature for the translated text
+#         if right_col.button("🔊 Pronounce Translation"):
+#             audio_file = pronounce_text(translated_text)
+#             if audio_file:
+#                 right_col.audio(audio_file, format="audio/mp3", autoplay=True)
 else:
     with left_col:
         st.markdown("### 🎙️ Voice Interaction")
