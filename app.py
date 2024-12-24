@@ -68,13 +68,13 @@ with st.form("user_details_form"):
     col1, col2 = st.columns(2)
     
     with col1:
-        name = st.text_input("Your Name:", placeholder="Enter your name")
+        name = st.text_input("Enter your name:", value="Enrique")
         age = st.number_input("Your Age:", min_value=1, max_value=120, value=25)
-        profession = st.text_input("Your Profession:", placeholder="Enter your profession")
+        profession = st.text_input("What is your profession? 💼", value="Software Engineer")
     
     with col2:
-        nationality = st.text_input("Your Nationality:", placeholder="Enter your nationality")
-        mother_tongue = st.text_input("Your Mother Tongue:", placeholder="Enter your native language")
+        nationality = st.text_input("Your Nationality:", value="Mexico")
+        mother_tongue = st.text_input("Your Mother Tongue:", value="Spanish")
         speaking_level = st.selectbox("English Speaking Level:", ["Beginner", "Intermediate", "Advanced"])
 
     # Start button
