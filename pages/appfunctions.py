@@ -218,7 +218,7 @@ if selected_module == "Pronunciation Checker":
 else:
     with left_col:
         st.markdown("### 🎙️ Voice Interaction")
-        st.info("**Record and practice your English!**")
+        st.info("**Record and say Hello to start**")
         wav_audio_data = st_audiorec()
 
         if wav_audio_data is not None:
