@@ -140,8 +140,15 @@ def initialize_chat_history(module_name):
         translation_module_name: f"Translate this text into English and output just only the translation:"
     }
 
+    # Set system prompt based on selected module
+    system_prompt = system_prompts.get(
+        module_name,
+        "You are Engli, an AI English trainer."
+    )
+
+    # Initialize chat history with the system prompt
     st.session_state.chat_history = [
-        {"role": "system", "content": system_prompts.get(module_name, "")}
+        {"role": "system", "content": system_prompt}
     ]
 
 # Sidebar Layout
@@ -223,6 +230,9 @@ else:
         # Call this function only if chat history is not already initialized
         if "chat_history" not in st.session_state or len(st.session_state.chat_history) == 0:
             initialize_chat_history(selected_module)
+
+        st.write("System Prompt:", system_prompt)
+        
 
         st.markdown("### 🎙️ Voice Interaction")
         st.info("**Record and say Hello to start**")
