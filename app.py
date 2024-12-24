@@ -1,3 +1,4 @@
+# pages/2_🎓_Main_App.py
 import streamlit as st
 import os
 from deepgram import DeepgramClient, SpeakOptions
@@ -7,6 +8,11 @@ import tempfile
 from st_audiorec import st_audiorec
 import random
 
+# Check if user details exist
+if "user_details" not in st.session_state:
+    st.warning("Please start from the landing page to set up your profile.")
+    st.button("Go to Landing Page", on_click=lambda: st.switch_page("pages/1_🏠_Landing.py"))
+    st.stop()
 # Minimalist Black and White Design
 st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="📖")
 
