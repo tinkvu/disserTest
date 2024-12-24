@@ -12,7 +12,7 @@ if "user_details" not in st.session_state:
     st.stop()
 
 # Minimalist Black and White Design
-st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="\ud83d\udd8b\ufe0f")
+st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="🖋️")
 
 # API Keys
 DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
