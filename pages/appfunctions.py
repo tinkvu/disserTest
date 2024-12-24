@@ -106,7 +106,7 @@ def initialize_chat_history(module_name):
 
 # Sidebar Layout
 with st.sidebar:
-    st.markdown("## \ud83c\udf0d Engli Language Trainer")
+    st.markdown("## 🧑🏼‍🏫 Engli Language Trainer")
 
     with st.expander("\ud83d\udc64 User Profile", expanded=False):
         st.markdown("### Your Profile")
@@ -122,7 +122,7 @@ with st.sidebar:
     st.markdown("---")
 
     module = st.radio(
-        "\ud83d\ude80 Choose Your Learning Mode",
+        "📜 Choose Your Learning Mode",
         ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker"],
         index=0
     )
@@ -136,7 +136,7 @@ if "chat_history" not in st.session_state or len(st.session_state.chat_history) 
     initialize_chat_history(module)
 
 # Main App Content
-st.title(f"\ud83c\udfa4 {module}")
+st.title(f"🗣️ {module}")
 
 left_col, right_col = st.columns([1, 2])
 
@@ -150,7 +150,7 @@ if module == "Pronunciation Checker":
 
 else:
     with left_col:
-        st.markdown("### \ud83c\udfa4 Voice Interaction")
+        st.markdown("### 🗣️ Voice Interaction")
         st.info("**Record and say Hello to start**")
         wav_audio_data = st_audiorec()
 
