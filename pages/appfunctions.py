@@ -11,7 +11,7 @@ import random
 # Check if user details exist
 if "user_details" not in st.session_state:
     st.warning("Please start from the landing page to set up your profile.")
-    st.button("Go to Landing Page", on_click=lambda: st.switch_page("/app.py"))
+    st.button("Go to Landing Page", on_click=lambda: st.switch_page("app.py"))
     st.stop()
 # Minimalist Black and White Design
 st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="📖")
