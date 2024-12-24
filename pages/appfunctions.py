@@ -213,7 +213,7 @@ left_col, right_col = st.columns([1, 2])
 
 if selected_module == "Pronunciation Checker":
     left_col.subheader("\U0001f50a Pronunciation Checker")
-    text_to_pronounce = left_col.text_input("Enter text for pronunciation:", value="D\u00fan Laoghaire")
+    text_to_pronounce = left_col.text_input("Enter text for pronunciation:", value="Mortgage")
     if text_to_pronounce:
         audio_file = pronounce_text(text_to_pronounce)
         if audio_file:
