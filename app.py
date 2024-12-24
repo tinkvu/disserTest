@@ -118,20 +118,6 @@ if "user_details" not in st.session_state:
 if "translations" not in st.session_state:
     st.session_state.translations = {}
 
-# Predefined questions for the Communication Level Test
-QUESTIONS_POOL = [
-    "Can you tell me about your favorite hobby?",
-    "Describe your last holiday.",
-    "What would you do if you could live anywhere in the world?",
-    "Explain how to make a cup of tea.",
-    "What are your plans for the weekend?",
-    "Tell me about your favorite book or movie.",
-    "What do you like to do in your free time?",
-    "Describe your typical day.",
-    "What is something new you learned recently?",
-    "If you could meet any historical figure, who would it be and why?"
-]
-
 # Chat History Initialization Function
 def initialize_chat_history(module_name):
     user_info = f"Name: {st.session_state.user_details.get('name', 'User')}, Profession: {st.session_state.user_details.get('profession', 'Unknown')}, Nationality: {st.session_state.user_details.get('nationality', 'Unknown')}, Age: {st.session_state.user_details.get('age', 'Not Specified')}"
@@ -144,8 +130,6 @@ def initialize_chat_history(module_name):
         "Irish Slang": f"You're Paddy, named Connor an Irish storyteller. Add three dots '...' to create natural conversation pauses. Use 'um' and 'uh' to sound more human. Speak with authentic Irish rhythm. Sprinkle in local slang. Tell short, engaging stories... Make language learning feel like a casual chat. Keep it warm and unpredictable. Sound like a real person from Ireland. Do not use any expressions like smiling, laughing and so on. The user is: {user_info}",
 
         "Any Language to English": "You translate text from any language to English. Output just only the english translation",
-
-        "Communication Level Test": f"You are an English teacher making a test for a student on the communication test assessment. You have to ask 10 questions one by one and check the response correctness in terms of grammar. The user is: {user_info}"
     }
 
     st.session_state.chat_history = [
@@ -180,7 +164,7 @@ with st.sidebar:
     # Create list of module titles in both English and target language
     module_titles = [
         f"{title} / {st.session_state.translations.get(title, title)}"
-        for title in ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker", "Communication Level Test"]
+        for title in ["English Conversation Friend", "Corporate English", "Irish Slang", "Pronunciation Checker"]
     ]
 
     module = st.radio(
@@ -209,49 +193,6 @@ if selected_module == "Pronunciation Checker":
         audio_file = pronounce_text(text_to_pronounce)
         if audio_file:
             left_col.audio(audio_file, format="audio/mp3", autoplay=True)
-
-elif selected_module == "Communication Level Test":
-    left_col.subheader("\U0001f3eb Communication Level Test")
-
-    if "question_number" not in st.session_state:
-        st.session_state.question_number = 1
-        st.session_state.responses = []
-        st.session_state.questions = random.sample(QUESTIONS_POOL, k=10)  # Randomly select 10 questions
-
-    if st.session_state.question_number <= len(st.session_state.questions):
-        current_question = st.session_state.questions[st.session_state.question_number - 1]
-        question_audio_path = deepgram_tts(current_question, output_path=f"question_{st.session_state.question_number}.mp3", module="Communication Level Test")
-
-        if question_audio_path:
-            left_col.audio(question_audio_path, format="audio/mp3", autoplay=True)
-
-        wav_audio_data = st_audiorec()
-
-        if wav_audio_data is not None:
-            with st.spinner('Processing your audio...'):
-                transcription = transcribe_audio(wav_audio_data)
-                if transcription and hasattr(transcription, "text"):
-                    transcription_text = transcription.text
-                    st.session_state.responses.append({"question": current_question, "response": transcription_text})
-                    st.session_state.question_number += 1
-    else:
-        evaluation_prompt = (
-            "There are 10 questions asked and responses from a student for an English Communication test. "
-            "Evaluate and give scores by analyzing each and every question and answer in terms of grammar only. "
-            "Give a score out of 10. Response should be just the score."
-        )
-        chat_history_for_evaluation = st.session_state.chat_history + [
-            {"role": "user", "content": f"Q: {entry['question']} A: {entry['response']}"} for entry in st.session_state.responses
-        ]
-        evaluation_response = client.chat.completions.create(
-            model="llama3-8b-8192",
-            messages=chat_history_for_evaluation + [{"role": "system", "content": evaluation_prompt}],
-            max_tokens=10,
-            temperature=0,
-            top_p=1,
-        )
-        score = evaluation_response.choices[0].message.content.strip()
-        left_col.markdown(f"### Your Score: {score} / 10")
 
 else:
     with left_col:
