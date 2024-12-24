@@ -60,26 +60,17 @@ with col2:
     # Languages that Work Best
     st.markdown("### 🌐 Languages that Work Best")
     st.markdown("""
-    - English  
-    - Spanish  
-    - French  
-    - German  
-    - Italian  
-    - Portuguese (European and Brazilian)  
-    - Dutch  
-    - Russian  
-    - Mandarin Chinese  
-    - Japanese  
-    - Korean  
-    - Arabic  
-    - Hindi  
-    - Bengali  
-    - Turkish  
-    - Swahili  
-    - Polish  
-    - Ukrainian  
-    - Vietnamese  
-    - Thai  
+    #### **European**:
+    - English, Spanish, French, German, Italian, Portuguese (European and Brazilian), Dutch, Russian, Polish, Ukrainian  
+    
+    #### **Asian**:
+    - Mandarin Chinese, Japanese, Korean, Hindi, Bengali, Turkish, Vietnamese, Thai  
+    
+    #### **Middle Eastern & African**:
+    - Arabic, Swahili  
+    
+    #### **South American**:
+    - Spanish, Portuguese (Brazilian)  
     
     These languages are optimized for accuracy and natural communication.
     """)
