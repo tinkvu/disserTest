@@ -220,6 +220,10 @@ if selected_module == "Pronunciation Checker":
 
 else:
     with left_col:
+        # Call this function only if chat history is not already initialized
+        if "chat_history" not in st.session_state or len(st.session_state.chat_history) == 0:
+            initialize_chat_history(selected_module)
+
         st.markdown("### 🎙️ Voice Interaction")
         st.info("**Record and say Hello to start**")
         wav_audio_data = st_audiorec()
