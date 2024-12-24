@@ -61,13 +61,13 @@ with col2:
     st.markdown("### 🌐 Languages that Work Best")
     st.markdown("""
     **European**:
-    - English, Spanish, French, German, Italian, Portuguese (European and Brazilian), Dutch, Russian, Polish, Ukrainian  
+    English, Spanish, French, German, Italian, Portuguese (European and Brazilian), Dutch, Russian, Polish, Ukrainian  
     **Asian**:
-    - Mandarin Chinese, Japanese, Korean, Hindi, Bengali, Turkish, Vietnamese, Thai  
+    Mandarin Chinese, Japanese, Korean, Hindi, Bengali, Turkish, Vietnamese, Thai  
     **Middle Eastern & African**:
-    - Arabic, Swahili  
+    Arabic, Swahili  
     **South American**:
-    - Spanish, Portuguese (Brazilian)  
+    Spanish, Portuguese (Brazilian)  
     These languages are optimized for accuracy and natural communication.
     """)
 # Get Started Section
