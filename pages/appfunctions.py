@@ -226,7 +226,7 @@ else:
                 transcription = transcribe_audio(wav_audio_data)
                 transcription_text = transcription.text
 
-                st.success(f"You said: *{transcription_text}*")
+                st.success(f"You said: {transcription_text}")
 
                 response, translated_response = generate_response(transcription_text, mother_tongue)
                 response_audio_path = deepgram_tts(response, "response_audio.mp3", selected_module)
