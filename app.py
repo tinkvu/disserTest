@@ -24,7 +24,7 @@ def translate_text(text, target_language):
         response = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[
-                {"role": "system", "content": "Translate the following text into " + target_language + ". Response should be just only the translation."},
+                {"role": "system", "content": "Translate the following text into " + target_language + ". Response should be just only the translation. If any error, return the same text."},
                 {"role": "user", "content": text},
             ],
             max_tokens=512,
