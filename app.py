@@ -31,6 +31,14 @@ with col1:
     - Meeting participation
     - Email writing
     """)
+    # Key Features
+    st.markdown("### ✨ Key Features")
+    st.markdown("""
+    - 🎤 **Voice Interaction**: Practice speaking with real-time feedback
+    - 🔄 **Instant Translations**: Get translations in your native language
+    - 🗣️ **Pronunciation Help**: Learn correct pronunciation
+    - 📝 **Personalized Learning**: Adapts to your level and needs
+    """)
 
 with col2:
     st.markdown("""
@@ -49,15 +57,32 @@ with col2:
     - Natural English equivalents
     """)
 
-# Key Features
-st.markdown("### ✨ Key Features")
-st.markdown("""
-- 🎤 **Voice Interaction**: Practice speaking with real-time feedback
-- 🔄 **Instant Translations**: Get translations in your native language
-- 🗣️ **Pronunciation Help**: Learn correct pronunciation
-- 📝 **Personalized Learning**: Adapts to your level and needs
-""")
-
+    # Languages that Work Best
+    st.markdown("### 🌐 Languages that Work Best")
+    st.markdown("""
+    - English  
+    - Spanish  
+    - French  
+    - German  
+    - Italian  
+    - Portuguese (European and Brazilian)  
+    - Dutch  
+    - Russian  
+    - Mandarin Chinese  
+    - Japanese  
+    - Korean  
+    - Arabic  
+    - Hindi  
+    - Bengali  
+    - Turkish  
+    - Swahili  
+    - Polish  
+    - Ukrainian  
+    - Vietnamese  
+    - Thai  
+    
+    These languages are optimized for accuracy and natural communication.
+    """)
 # Get Started Section
 st.markdown("### 🚀 Ready to Start?")
 st.markdown("Tell us about yourself to personalize your learning experience")
