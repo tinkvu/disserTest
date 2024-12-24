@@ -206,6 +206,7 @@ if selected_module != translation_module_name:
     st.title(f"🎤 {selected_module} / {translated_module}")
 else:
     st.title(f"🎤 {selected_module}")
+    initialize_chat_history(selected_module)
 
 # Interaction Modules
 left_col, right_col = st.columns([1, 2])
