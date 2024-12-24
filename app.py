@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="📖")
 
 # Title and Introduction
-st.title("🌟 Welcome to Engli - Your AI English Learning Companion")
+st.title("Your AI English Learning Companion")
 st.markdown("### Transform your English learning journey with personalized AI assistance")
 
 # Brief introduction
