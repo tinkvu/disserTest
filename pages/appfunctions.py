@@ -148,19 +148,20 @@ def initialize_chat_history(module_name):
 with st.sidebar:
     st.markdown("## 🌍 Engli Language Trainer")
 
+    # Changed expanded=True to expanded=False to hide by default
     with st.expander("👤 User Profile", expanded=False):
-        with st.form("user_details_form"):
-            st.write("Tell us about yourself")
-            st.session_state.user_details["name"] = st.text_input("Your Name:", value="Gustavo")
-            st.session_state.user_details["age"] = st.number_input("Your Age:", min_value=1, max_value=120, step=1, value=30)
-            st.session_state.user_details["profession"] = st.text_input("Your Profession:", value="Software Engineer")
-            st.session_state.user_details["nationality"] = st.text_input("Your Nationality:", value="Brazilian")
-            st.session_state.user_details["mother_tongue"] = st.text_input("Your Mother Tongue:", value="Portuguese")
-            st.session_state.user_details["speaking_level"] = st.selectbox("English Speaking Level:", ["Beginner", "Intermediate", "Advanced"])
-
-            submitted = st.form_submit_button("Save Profile", type="primary")
-            if submitted:
-                st.experimental_rerun()
+        # Display current profile info (read-only)
+        st.markdown("### Your Profile")
+        st.markdown(f"**Name:** {st.session_state.user_details['name']}")
+        st.markdown(f"**Age:** {st.session_state.user_details['age']}")
+        st.markdown(f"**Profession:** {st.session_state.user_details['profession']}")
+        st.markdown(f"**Nationality:** {st.session_state.user_details['nationality']}")
+        st.markdown(f"**Mother Tongue:** {st.session_state.user_details['mother_tongue']}")
+        st.markdown(f"**English Level:** {st.session_state.user_details['speaking_level']}")
+        
+        # Add edit button to return to landing page
+        if st.button("Edit Profile", type="secondary"):
+            st.switch_page("app.py")
 
     # Get mother tongue for translation module name
     mother_tongue = st.session_state.user_details.get('mother_tongue', 'Any Language')
