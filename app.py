@@ -95,7 +95,7 @@ with st.form("user_details_form"):
             }
             # Redirect to main app
             st.success("Profile saved! Redirecting to the main application...")
-            st.switch_page("pages/2_🎓_Main_App.py")
+            st.switch_page("appfunctions.py")
 
 # Footer
 st.markdown("---")
