@@ -244,7 +244,7 @@ else:
         with chat_container:
             for message in st.session_state.chat_history:
                 if message["role"] == "user":
-                    st.markdown(f"<div style='text-align: right; color: #2980b9;'>👤 You: {message['content']}</div>", unsafe_allow_html=True)
+                    st.markdown(f"<div style='text-align: right;'>👤 You: {message['content']}</div>", unsafe_allow_html=True)
                 elif message["role"] == "assistant":
                     st.markdown(f"<div style='text-align: left; color: #27ae60;'>🤖 Engli: {message['content']}</div>", unsafe_allow_html=True)
                 elif message["role"] == "assistant_translated":
