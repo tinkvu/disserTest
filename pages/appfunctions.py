@@ -13,7 +13,7 @@ if "user_details" not in st.session_state:
     st.warning("Redirecting to the landing page. Please set up your profile.")
 
     # Automatically redirect to the landing page
-    st.experimental_set_query_params(page="landing")  # Optional: Set query parameters
+    # st.experimental_set_query_params(page="landing")  # Optional: Set query parameters
     st.switch_page("app.py")  # Redirect to the landing page script
 
     # Stop further execution
