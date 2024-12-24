@@ -103,24 +103,17 @@ def generate_response(text, target_language):
 # Function to play audio using Deepgram TTS
 def deepgram_tts(text, output_path="output_audio.mp3", module=None):
     try:
-        # Select voice based on module
-        options = SpeakOptions(
-            model="aura-angus-en" if module == "Irish Slangs" else "aura-asteria-en"
-        )
-
-        # Ensure audio directory exists
+        options = SpeakOptions(model="aura-angus-en" if module == "Irish Slangs" else "aura-asteria-en")
         audio_folder = os.path.join("static", "audio")
-        os.makedirs(audio_folder, exist_ok=True)
-
-        # Generate full file path
+        if not os.path.exists(audio_folder):
+            os.makedirs(audio_folder)
         filename = os.path.join(audio_folder, output_path)
-
-        # Generate speech
         deepgram.speak.v("1").save(filename, {"text": text}, options)
         return filename
     except Exception as e:
         st.error(f"TTS generation failed: {e}")
         return None
+
 
 # Initialize session state
 if "chat_history" not in st.session_state:
@@ -220,18 +213,7 @@ if selected_module == "Pronunciation Checker":
         audio_file = pronounce_text(text_to_pronounce)
         if audio_file:
             left_col.audio(audio_file, format="audio/mp3", autoplay=True)
-# elif selected_module == f"{mother_tongue} to English":
-#     left_col.subheader(f"🌐 {mother_tongue} Input")
-#     text_to_translate = left_col.text_area("Enter text to translate:", height=150)
-#     if text_to_translate:
-#         translated_text = translate_text(text_to_translate, "English")
-#         right_col.subheader("🎯 English Translation")
-#         right_col.markdown(f"**Translation:** {translated_text}")
-#         # Add pronunciation feature for the translated text
-#         if right_col.button("🔊 Pronounce Translation"):
-#             audio_file = pronounce_text(translated_text)
-#             if audio_file:
-#                 right_col.audio(audio_file, format="audio/mp3", autoplay=True)
+
 else:
     with left_col:
         st.markdown("### 🎙️ Voice Interaction")
