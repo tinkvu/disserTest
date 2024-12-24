@@ -250,8 +250,8 @@ else:
                     st.markdown(f"<div style='text-align: left; color: #27ae60;'>🤖 Engli: {message['content']}</div>", unsafe_allow_html=True)
                 elif message["role"] == "assistant_translated":
                     st.markdown(f"<div style='text-align: left; color: #27ae60; font-style: italic;'>🤖 Engli (Translated): {message['content']}</div>", unsafe_allow_html=True)
-                else:
-                    st.write("Current Chat History:", st.session_state.chat_history)
+                # else:
+                #     st.write("Current Chat History:", st.session_state.chat_history)
 
 
 # Footer
