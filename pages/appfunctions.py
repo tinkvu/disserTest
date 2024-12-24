@@ -194,7 +194,7 @@ with st.sidebar:
     # Reset Conversation Button
     if st.button("Reset Conversation"):
         if "chat_history" in st.session_state:
-            del st.session_state["chat_history"]
+            del st.session_state.chat_history
         # if "user_details" in st.session_state:
         #     del st.session_state["user_details"]
         st.success("Conversation reset successfully!")
