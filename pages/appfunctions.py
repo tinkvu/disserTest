@@ -76,6 +76,25 @@ def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
         st.error(f"Audio transcription failed: {e}")
         return None
 
+def clean_action_descriptors(text):
+    """
+    Remove action descriptors like (laughs), (pauses), **smiles**, etc.
+    from the text.
+    """
+    import re
+    
+    # Remove content within parentheses
+    text = re.sub(r'\([^)]*\)', '', text)
+    
+    # Remove content within asterisks
+    text = re.sub(r'\*\*[^*]*\*\*', '', text)
+    text = re.sub(r'\*[^*]*\*', '', text)
+    
+    # Clean up any double spaces created by removals
+    text = re.sub(r'\s+', ' ', text)
+    
+    return text.strip()
+
 def generate_response(text, target_language):
     try:
         if len(st.session_state.chat_history) == 0:
@@ -95,6 +114,8 @@ def generate_response(text, target_language):
             stream=False
         )
         assistant_response = completion.choices[0].message.content
+        # Clean the response before storing and translating
+        cleaned_response = clean_action_descriptors(assistant_response)
         
         # Add messages to chat history
         st.session_state.chat_history.append({"role": "user", "content": text})
