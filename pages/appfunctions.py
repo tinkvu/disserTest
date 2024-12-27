@@ -347,6 +347,7 @@ else:
                 margin-bottom: 1rem;
                 white-space: pre-wrap;
                 word-wrap: break-word;
+                color: #3A3B3C;
             }
             .user-message {
                 background-color: #f0f2f6;
