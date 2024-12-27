@@ -7,6 +7,7 @@ from groq import Groq
 import tempfile
 from st_audiorec import st_audiorec
 import random
+import re
 
 # Check if user details exist
 if "user_details" not in st.session_state:
@@ -81,17 +82,24 @@ def clean_action_descriptors(text):
     Remove action descriptors like (laughs), (pauses), **smiles**, etc.
     from the text.
     """
-    import re
+    if not text:
+        return text
+        
+    # Remove content within parentheses with any characters including newlines
+    text = re.sub(r'\([^)]+\)', '', text)
     
-    # Remove content within parentheses
-    text = re.sub(r'\([^)]*\)', '', text)
+    # Remove content within single and double asterisks
+    text = re.sub(r'\*\*[^*]+\*\*', '', text)
+    text = re.sub(r'\*[^*]+\*', '', text)
     
-    # Remove content within asterisks
-    text = re.sub(r'\*\*[^*]*\*\*', '', text)
-    text = re.sub(r'\*[^*]*\*', '', text)
+    # Remove common emoji and action patterns
+    text = re.sub(r'\[[^\]]+\]', '', text)  # Remove [actions]
+    text = re.sub(r'_[^_]+_', '', text)     # Remove _actions_
     
-    # Clean up any double spaces created by removals
-    text = re.sub(r'\s+', ' ', text)
+    # Clean up any extra whitespace
+    text = re.sub(r'\s+', ' ', text)        # Replace multiple spaces with single space
+    text = re.sub(r'\s+([.,!?])', r'\1', text)  # Remove spaces before punctuation
+    text = re.sub(r'\n\s*\n', '\n', text)   # Remove extra blank lines
     
     return text.strip()
 
