@@ -151,7 +151,7 @@ def initialize_chat_history(module_name):
         - React naturally to user's responses ("Oh really?", "That's interesting!", "I see what you mean")
         - Show authentic interest by asking follow-up questions
         - Mirror the user's energy level and conversation pace
-        - Never use expressions as words (laughs, pause, smiles, )
+        - Do not generate action descriptors in your response
         
         Teaching Approach:
         - Prioritize flow and confidence over perfect grammar
@@ -174,7 +174,7 @@ def initialize_chat_history(module_name):
         - Demonstrate authentic business dialogue flow
         - Balance formality with approachability
         - Use relevant industry terminology naturally
-        Never use expressions as words (laughs, pause, smiles, )
+        - Do not generate action descriptors in your response
         
         Teaching Focus:
         - Email writing
@@ -203,7 +203,7 @@ def initialize_chat_history(module_name):
         - Incorporate common Irish expressions naturally
         - Tell short, engaging stories about daily life in Ireland
         - Use local slang in context
-        - Never use expressions as words (laughs, pause, smiles, )
+        - Do not generate action descriptors in your response
         
         Teaching Approach:
         - Explain slang and expressions when used
