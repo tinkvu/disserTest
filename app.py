@@ -6,78 +6,12 @@ st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_ico
 st.title("Your AI English Learning Companion")
 st.markdown("### Transform your English learning journey with personalized AI assistance")
 
-# Initial Assessment Form
-with st.form("initial_assessment"):
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        mother_tongue = st.text_input("Your Mother Tongue:", value="Spanish")
-    with col2:
-        speaking_level = st.selectbox("English Speaking Level:", ["Beginner", "Intermediate", "Advanced"])
-    
-    submit_assessment = st.form_submit_button("Show Recommended Learning Path", use_container_width=True)
+# Brief introduction
+st.markdown("""
+Our AI-powered platform offers multiple specialized modules to help you master English:
+""")
 
-if submit_assessment or 'speaking_level' in st.session_state:
-    level = speaking_level if submit_assessment else st.session_state.get('speaking_level')
-    native_lang = mother_tongue if submit_assessment else st.session_state.get('mother_tongue')
-    
-    # Display recommended path based on level
-    st.markdown("### 🎯 Your Recommended Learning Path")
-    
-    if level == "Beginner":
-        st.info(f"""
-        ### Perfect Starting Point for Beginners
-        We recommend following this sequence to build a strong foundation:
-        
-        1. **{native_lang} to English Translation Module**
-           - Start with familiar concepts
-           - Learn basic vocabulary and phrases
-           - Get comfortable with English structure
-        
-        2. **Pronunciation Checker**
-           - Master basic English sounds
-           - Practice common words
-           - Get instant feedback
-        
-        3. **English Conversation Friend**
-           - Begin simple conversations
-           - Learn everyday phrases
-           - Build confidence gradually
-        """)
-    
-    elif level == "Intermediate":
-        st.info("""
-        ### Enhance Your Skills
-        Focus on these modules to advance your English:
-        
-        1. **English Conversation Friend**
-           - Practice natural conversations
-           - Expand vocabulary
-           - Learn idioms and expressions
-        
-        2. **Corporate English**
-           - Develop professional communication
-           - Learn business terminology
-           - Master email writing
-        """)
-    
-    else:  # Advanced
-        st.info("""
-        ### Perfect Your English
-        Take your English to the next level:
-        
-        1. **Corporate English**
-           - Master complex business scenarios
-           - Perfect professional writing
-           - Lead meetings confidently
-        
-        2. **Irish Slang**
-           - Understand local expressions
-           - Master regional accents
-           - Gain cultural insights
-        """)
-
-# Main content continues with module descriptions
+# Module descriptions using columns
 col1, col2 = st.columns(2)
 
 with col1:
@@ -116,7 +50,7 @@ with col2:
 
 # Get Started Section
 st.markdown("### 🚀 Ready to Start?")
-st.markdown("Complete your profile to begin your personalized learning journey")
+st.markdown("Complete your profile to get your personalized learning path")
 
 # User Details Form
 with st.form("user_details_form"):
@@ -130,22 +64,14 @@ with st.form("user_details_form"):
     
     with col2:
         nationality = st.text_input("Your Nationality:", value="Mexico")
-        # Pre-fill with previously selected values
-        if submit_assessment:
-            st.session_state['mother_tongue'] = mother_tongue
-            st.session_state['speaking_level'] = speaking_level
-        mother_tongue_profile = st.text_input("Your Mother Tongue:", value=st.session_state.get('mother_tongue', ''))
-        speaking_level_profile = st.selectbox(
-            "English Speaking Level:",
-            ["Beginner", "Intermediate", "Advanced"],
-            index=["Beginner", "Intermediate", "Advanced"].index(st.session_state.get('speaking_level', 'Beginner'))
-        )
+        mother_tongue = st.text_input("Your Mother Tongue:", value="Spanish")
+        speaking_level = st.selectbox("English Speaking Level:", ["Beginner", "Intermediate", "Advanced"])
 
     # Start button
-    start_button = st.form_submit_button("Start Learning! 🚀", type="primary", use_container_width=True)
+    start_button = st.form_submit_button("Get Your Learning Path! 🚀", type="primary", use_container_width=True)
     
     if start_button:
-        if not all([name, profession, nationality, mother_tongue_profile]):
+        if not all([name, profession, nationality, mother_tongue]):
             st.error("Please fill in all the fields to continue.")
         else:
             # Save user details to session state
@@ -154,14 +80,80 @@ with st.form("user_details_form"):
                 "age": age,
                 "profession": profession,
                 "nationality": nationality,
-                "mother_tongue": mother_tongue_profile,
-                "speaking_level": speaking_level_profile
+                "mother_tongue": mother_tongue,
+                "speaking_level": speaking_level
             }
-            # Redirect to main app
-            st.success("Profile saved! Redirecting to the main application...")
-            st.switch_page("pages/appfunctions.py")
+            
+            # Show personalized recommendations based on level
+            st.markdown("### 🎯 Your Personalized Learning Path")
+            
+            if speaking_level == "Beginner":
+                st.info(f"""
+                ### Welcome to Your English Journey! 🌟
+                Based on your profile, here's your recommended learning path:
+                
+                1. **Start with {mother_tongue} to English Translation Module**
+                   - Begin with familiar concepts from your native language
+                   - Build basic vocabulary and phrases
+                   - Understand English sentence structure
+                
+                2. **Move to Pronunciation Checker**
+                   - Master fundamental English sounds
+                   - Practice common words and phrases
+                   - Get real-time pronunciation feedback
+                
+                3. **Progress to English Conversation Friend**
+                   - Start with simple daily conversations
+                   - Build confidence gradually
+                   - Learn everyday expressions
+                
+                This path will help you build a strong foundation in English step by step.
+                """)
+            
+            elif speaking_level == "Intermediate":
+                st.info("""
+                ### Ready to Level Up! 🚀
+                Here's your recommended path to advance your English skills:
+                
+                1. **Start with English Conversation Friend**
+                   - Engage in natural, flowing conversations
+                   - Expand your vocabulary
+                   - Practice idioms and expressions
+                   - Get contextual feedback
+                
+                2. **Proceed to Corporate English**
+                   - Learn professional communication
+                   - Master business terminology
+                   - Practice email writing
+                   - Develop presentation skills
+                
+                This combination will help you transition from everyday English to professional fluency.
+                """)
+            
+            else:  # Advanced
+                st.info("""
+                ### Perfect Your English! ⭐
+                Here's your path to mastery:
+                
+                1. **Focus on Corporate English**
+                   - Handle complex business scenarios
+                   - Perfect professional writing
+                   - Lead meetings confidently
+                   - Master negotiation skills
+                
+                2. **Explore Irish Slang**
+                   - Understanding local expressions
+                   - Master regional accents
+                   - Gain cultural insights
+                   - Navigate casual conversations fluently
+                
+                This path will help you achieve near-native fluency and cultural understanding.
+                """)
+            
+            st.success("Profile saved! Click 'Start Learning' to begin your journey.")
+            st.button("Start Learning", type="primary", on_click=lambda: st.switch_page("pages/appfunctions.py"))
 
-# Footer (same as original)
+# Footer
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center;'>
