@@ -138,7 +138,12 @@ st.markdown("""
             />
         </a>
         <a href="https://ai.meta.com/llama/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; text-decoration: none; color: #fff;">
-            <span style="font-weight: bold; font-size: 1.2rem;">Meta Llama</span>
+            <img
+                src="https://static.xx.fbcdn.net/rsrc.php/y9/r/tL_v571NdZ0.svg"
+                alt="Meta Llama"
+                style="height: 30px; width: auto;"
+            />
+            
         </a>
         <a href="https://openai.com/research/whisper" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; text-decoration: none; color: #fff;">
             <span style="font-weight: bold; font-size: 1.2rem;">Whisper</span>
