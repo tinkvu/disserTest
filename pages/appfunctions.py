@@ -142,7 +142,7 @@ def initialize_chat_history_if_empty(module_name):
         - Use relevant industry terminology naturally
         - Do not generate action descriptors in your response
         - Make the responses short
-        - Use roleplays and suggesr tips.
+        - Use roleplays and suggest tips.
         
         Teaching Focus:
         - Email writing
