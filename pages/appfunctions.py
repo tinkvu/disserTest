@@ -141,6 +141,7 @@ def initialize_chat_history_if_empty(module_name):
         - Balance formality with approachability
         - Use relevant industry terminology naturally
         - Do not generate action descriptors in your response
+        - Make the responses short
         
         Teaching Focus:
         - Email writing
