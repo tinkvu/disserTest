@@ -92,20 +92,17 @@ def clean_action_descriptors(text):
 
 def generate_response(text, target_language):
     try:
-        # Ensure chat history is initialized
+        # Initialize chat history if empty
         if "chat_history" not in st.session_state or not st.session_state.chat_history:
             st.session_state.chat_history = [{
                 "role": "system",
                 "content": "You are Engli, an AI English trainer. Respond in a friendly and helpful tone."
             }]
 
-        # Add user message to chat history
+        # Add the user's message to the chat history
         st.session_state.chat_history.append({"role": "user", "content": text})
 
-        # Debug chat history before API call
-        st.write("Chat history before API call:", st.session_state.chat_history)
-
-        # Make API call with full chat history
+        # Pass the full chat history to the API
         completion = client.chat.completions.create(
             model="llama-3.1-70b-versatile",
             messages=st.session_state.chat_history,
@@ -115,24 +112,21 @@ def generate_response(text, target_language):
             stream=False
         )
 
-        # Process assistant response
+        # Extract and clean assistant response
         assistant_response = completion.choices[0].message.content
         cleaned_response = clean_action_descriptors(assistant_response)
 
-        # Add assistant response to chat history
+        # Append assistant response to chat history
         st.session_state.chat_history.append({"role": "assistant", "content": cleaned_response})
 
-        # Translate the response
+        # Translate assistant response
         translated_response = translate_text(cleaned_response, target_language)
         st.session_state.chat_history.append({"role": "assistant_translated", "content": translated_response})
-
-        # Debug chat history after API call
-        st.write("Chat history after API call:", st.session_state.chat_history)
 
         return cleaned_response, translated_response
     except Exception as e:
         st.error(f"Response generation failed: {e}")
-        return "Error generating response.", None
+        return "Sorry, I encountered an error.", None
 
 
 # Function to play audio using Deepgram TTS
