@@ -65,7 +65,7 @@ def pronounce_text(text):
         return None
 
 # Function to transcribe audio using Groq Whisper API
-def transcribe_audio(file_path_or_bytes, model="whisper-large-v3-turbo"):
+def transcribe_audio(file_path_or_bytes, model="whisper-large-v3"):
     try:
         transcription = client.audio.transcriptions.create(
             file=("recorded_audio.wav", file_path_or_bytes),
