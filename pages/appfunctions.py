@@ -479,6 +479,13 @@ st.markdown("""
                 style="height: 30px; width: auto;"
             />
         </a>
+        <a href="https://streamlit.io" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <img
+                src="https://streamlit.io/images/brand/streamlit-mark-color.svg"
+                alt="Streamlit"
+                style="height: 30px; width: auto;"
+            />
+        </a>
     </div>
 </div>
 """, unsafe_allow_html=True)
