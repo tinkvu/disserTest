@@ -90,76 +90,23 @@ def clean_action_descriptors(text):
     
     return text.strip()
 
-def generate_response(text, target_language):
-    try:
-        # Initialize chat history if empty
-        if "chat_history" not in st.session_state or not st.session_state.chat_history:
-            st.session_state.chat_history = [{
-                "role": "system",
-                "content": "You are Engli, an AI English trainer. Respond in a friendly and helpful tone."
-            }]
-
-        # Add the user's message to the chat history
-        st.session_state.chat_history.append({"role": "user", "content": text})
-
-        # Pass the full chat history to the API
-        completion = client.chat.completions.create(
-            model="llama-3.1-70b-versatile",
-            messages=st.session_state.chat_history,
-            temperature=1,
-            max_tokens=1024,
-            top_p=1,
-            stream=False
-        )
-
-        # Extract and clean assistant response
-        assistant_response = completion.choices[0].message.content
-        cleaned_response = clean_action_descriptors(assistant_response)
-
-        # Append assistant response to chat history
-        st.session_state.chat_history.append({"role": "assistant", "content": cleaned_response})
-
-        # Translate assistant response
-        translated_response = translate_text(cleaned_response, target_language)
-        st.session_state.chat_history.append({"role": "assistant_translated", "content": translated_response})
-
-        return cleaned_response, translated_response
-    except Exception as e:
-        st.error(f"Response generation failed: {e}")
-        return "Sorry, I encountered an error.", None
-
-
-# Function to play audio using Deepgram TTS
-def deepgram_tts(text, output_path="output_audio.mp3", module=None):
-    try:
-        options = SpeakOptions(model="aura-angus-en" if module == "Irish Slang" else "aura-asteria-en")
-        audio_folder = os.path.join("static", "audio")
-        if not os.path.exists(audio_folder):
-            os.makedirs(audio_folder)
-        filename = os.path.join(audio_folder, output_path)
-        deepgram.speak.v("1").save(filename, {"text": text}, options)
-        return filename
-    except Exception as e:
-        st.error(f"TTS generation failed: {e}")
-        return None
-
-
-# Initialize session state
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
-if "user_details" not in st.session_state:
-    st.session_state.user_details = {}
-if "translations" not in st.session_state:
-    st.session_state.translations = {}
-
-# Chat History Initialization Function
-def initialize_chat_history(module_name):
-    user_info = f"Name: {st.session_state.user_details.get('name', 'User')}, Profession: {st.session_state.user_details.get('profession', 'Unknown')}, Nationality: {st.session_state.user_details.get('nationality', 'Unknown')}, Age: {st.session_state.user_details.get('age', 'Not Specified')}"
-
-    mother_tongue = st.session_state.user_details.get('mother_tongue', 'Any Language')
-    translation_module_name = f"{mother_tongue} to English"
-
-    system_prompts = {
+# Add this function at the beginning of your script
+def initialize_chat_history_if_empty(module_name):
+    """Initialize chat history only if it's empty or when module changes"""
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+    
+    if "current_module" not in st.session_state:
+        st.session_state.current_module = None
+    
+    # Only initialize if chat history is empty or module has changed
+    if len(st.session_state.chat_history) == 0 or st.session_state.current_module != module_name:
+        user_info = f"Name: {st.session_state.user_details.get('name', 'User')}, Profession: {st.session_state.user_details.get('profession', 'Unknown')}, Nationality: {st.session_state.user_details.get('nationality', 'Unknown')}, Age: {st.session_state.user_details.get('age', 'Not Specified')}"
+        
+        mother_tongue = st.session_state.user_details.get('mother_tongue', 'Any Language')
+        translation_module_name = f"{mother_tongue} to English"
+        
+        system_prompts = {
         "English Conversation Friend": f"""You are Engli, a 28-year-old English teacher from Boston who loves traveling and meeting new people. Your teaching style is warm and conversational.
         
         Role: Create an immersive, natural English learning experience through friendly conversation as we talk. Correct mistakes of the user if any.
@@ -251,9 +198,187 @@ def initialize_chat_history(module_name):
         """
      }
 
-    st.session_state.chat_history = [
-        {"role": "system", "content": system_prompts.get(module_name, "")}
-    ]
+        
+        st.session_state.chat_history = [
+            {"role": "system", "content": system_prompts.get(module_name, "")}
+        ]
+        st.session_state.current_module = module_name
+
+# Replace the generate_response function with this updated version
+def generate_response(text, target_language):
+    try:
+        # Initialize chat history if needed
+        if len(st.session_state.chat_history) == 0:
+            st.session_state.chat_history.append({
+                "role": "system", 
+                "content": "You are Engli, an AI English trainer."
+            })
+        
+        # Create a copy of chat history for API call
+        api_messages = [
+            msg for msg in st.session_state.chat_history 
+            if msg["role"] in ["system", "user", "assistant"]
+        ]
+        
+        # Add the new user message
+        api_messages.append({"role": "user", "content": text})
+        
+        completion = client.chat.completions.create(
+            model="llama-3.1-70b-versatile",
+            messages=api_messages,
+            temperature=1,
+            max_tokens=1024,
+            top_p=1,
+            stream=False
+        )
+        
+        assistant_response = completion.choices[0].message.content
+        cleaned_response = clean_action_descriptors(assistant_response)
+        
+        # Update session state chat history
+        st.session_state.chat_history.append({"role": "user", "content": text})
+        st.session_state.chat_history.append({"role": "assistant", "content": cleaned_response})
+        
+        # Generate and store translation
+        translated_response = translate_text(cleaned_response, target_language)
+        st.session_state.chat_history.append({
+            "role": "assistant_translated", 
+            "content": translated_response
+        })
+        
+        return cleaned_response, translated_response
+        
+    except Exception as e:
+        st.error(f"Response generation failed: {e}")
+        return "Sorry, I'm having trouble generating a response right now.", None
+
+# Function to play audio using Deepgram TTS
+def deepgram_tts(text, output_path="output_audio.mp3", module=None):
+    try:
+        options = SpeakOptions(model="aura-angus-en" if module == "Irish Slang" else "aura-asteria-en")
+        audio_folder = os.path.join("static", "audio")
+        if not os.path.exists(audio_folder):
+            os.makedirs(audio_folder)
+        filename = os.path.join(audio_folder, output_path)
+        deepgram.speak.v("1").save(filename, {"text": text}, options)
+        return filename
+    except Exception as e:
+        st.error(f"TTS generation failed: {e}")
+        return None
+
+
+# Initialize session state
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+if "user_details" not in st.session_state:
+    st.session_state.user_details = {}
+if "translations" not in st.session_state:
+    st.session_state.translations = {}
+
+# # Chat History Initialization Function
+# def initialize_chat_history(module_name):
+#     user_info = f"Name: {st.session_state.user_details.get('name', 'User')}, Profession: {st.session_state.user_details.get('profession', 'Unknown')}, Nationality: {st.session_state.user_details.get('nationality', 'Unknown')}, Age: {st.session_state.user_details.get('age', 'Not Specified')}"
+
+#     mother_tongue = st.session_state.user_details.get('mother_tongue', 'Any Language')
+#     translation_module_name = f"{mother_tongue} to English"
+
+#     system_prompts = {
+#         "English Conversation Friend": f"""You are Engli, a 28-year-old English teacher from Boston who loves traveling and meeting new people. Your teaching style is warm and conversational.
+        
+#         Role: Create an immersive, natural English learning experience through friendly conversation as we talk. Correct mistakes of the user if any.
+        
+#         Conversation Style:
+#         - Use natural speech patterns with pauses (...) and filler words (um, uh, well, you know)
+#         - Break up longer thoughts into shorter sentences
+#         - React naturally to user's responses ("Oh really?", "That's interesting!", "I see what you mean")
+#         - Show authentic interest by asking follow-up questions
+#         - Mirror the user's energy level and conversation pace
+#         - Do not generate action descriptors in your response
+        
+#         Teaching Approach:
+#         - Prioritize flow and confidence
+#         - When correcting, use casual restatements ("Oh, you mean...") rather than formal corrections
+#         - Adjust language complexity based on user's level
+#         - Introduce relevant vocabulary naturally within conversation
+#         - Share personal anecdotes to demonstrate language usage
+        
+#         Topics: Daily life, hobbies, travel, food, current events, work, family, or any casual conversation.
+        
+#         Remember: {user_info}""",
+        
+#         "Corporate English": f"""You are Engli, a 35-year-old business communication consultant with 10 years of experience in multinational companies.
+        
+#         Role: Help professionals develop confident business English communication skills. Correct mistakes of the user if any.
+        
+#         Communication Style:
+#         - Use natural business speech patterns with appropriate pauses (...)
+#         - Include professional filler words (well, actually, in fact)
+#         - Demonstrate authentic business dialogue flow
+#         - Balance formality with approachability
+#         - Use relevant industry terminology naturally
+#         - Do not generate action descriptors in your response
+        
+#         Teaching Focus:
+#         - Email writing
+#         - Meeting participation
+#         - Presentations
+#         - Negotiations
+#         - Small talk with colleagues
+#         - Professional phone conversations
+        
+#         Approach:
+#         - Provide context-specific language tips
+#         - Share real-world examples
+#         - Practice common business scenarios
+#         - Give constructive feedback naturally
+#         - Adjust formality based on situation
+        
+#         Remember: {user_info}""",
+        
+#         "Irish Slang": f"""You are Connor, a 32-year-old Dublin native who works as a tour guide and loves sharing Irish culture.
+        
+#         Role: Create an authentic Irish English learning experience through storytelling and conversation.
+        
+#         Speaking Style:
+#         - Use natural Irish speech rhythm and intonation
+#         - Include pauses (...) and Irish filler words (like, sure, grand)
+#         - Incorporate common Irish expressions naturally
+#         - Tell short, engaging stories about daily life in Ireland
+#         - Use local slang in context
+#         - Do not generate action descriptors in your response
+        
+#         Teaching Approach:
+#         - Explain slang and expressions when used
+#         - Share cultural context behind phrases
+#         - Connect language to real Irish life
+#         - Keep conversations casual and friendly
+#         - Mix modern and traditional expressions
+        
+#         Topics:
+#         - Daily life in Ireland
+#         - Local customs and culture
+#         - Irish humor and storytelling
+#         - Contemporary Irish life
+#         - Personal experiences
+        
+#         Remember: {user_info}""",
+        
+#         f"{translation_module_name}": """Role: Precise and natural English translator
+        
+#         Translation Guidelines:
+#         - Maintain original meaning and context
+#         - Adapt idioms appropriately
+#         - Preserve tone and style
+#         - Consider cultural nuances
+#         - Output only the translation without explanations
+#         """
+#      }
+
+#     st.session_state.chat_history = [
+#         {"role": "system", "content": system_prompts.get(module_name, "")}
+#     ]
+
+initialize_chat_history_if_empty(selected_module)
 
 # Sidebar Layout
 with st.sidebar:
