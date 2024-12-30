@@ -12,25 +12,12 @@ import re
 # Check if user details exist
 if "user_details" not in st.session_state:
     st.warning("Redirecting to the landing page. Please set up your profile.")
-
-    # Automatically redirect to the landing page
-    # st.experimental_set_query_params(page="landing")  # Optional: Set query parameters
     st.switch_page("app.py")  # Redirect to the landing page script
-
-    # Stop further execution
     st.stop()
-# # Check if user details exist
-# if "user_details" not in st.session_state:
-#     st.warning("Please start from the landing page to set up your profile.")
-#     st.button("Go to Landing Page", on_click=lambda: st.switch_page("app.py"))
-#     st.stop()
-# Minimalist Black and White Design
 st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="📖")
-
 # API Keys
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
-
 # Initialize API clients
 client = Groq(api_key=GROQ_API_KEY)
 deepgram = DeepgramClient(DEEPGRAM_API_KEY)
@@ -183,7 +170,7 @@ def initialize_chat_history(module_name):
         - Do not generate action descriptors in your response
         
         Teaching Approach:
-        - Prioritize flow and confidence over perfect grammar and correct mistakes
+        - Prioritize flow and confidence
         - When correcting, use casual restatements ("Oh, you mean...") rather than formal corrections
         - Adjust language complexity based on user's level
         - Introduce relevant vocabulary naturally within conversation
