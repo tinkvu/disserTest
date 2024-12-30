@@ -25,7 +25,7 @@ deepgram = DeepgramClient(DEEPGRAM_API_KEY)
 @st.dialog("Your Personalized Learning Path")
 def show_level_recommendations(level, mother_tongue):
     if level.lower() == 'beginner':
-        st.info("👋 Welcome! Here's your recommended path to fluency:", icon="ℹ️")
+        st.info(f"👋 Hi {name}, Here's your recommended path to fluency:")
         
         st.markdown("### 1️⃣ Start with Translation")
         st.markdown(f"Begin with **{mother_tongue} to English** module")
