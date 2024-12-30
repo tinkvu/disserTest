@@ -31,6 +31,11 @@ st.components.v1.html(
     height=315,
 )
 
+st.markdown("""
+### Couldn't follow? Don't worry! 😊  
+If you couldn't understand, then this app is for you! Start improving your English and master the Irish accent now.
+""")
+
 # Module descriptions using columns
 col1, col2 = st.columns(2)
 
