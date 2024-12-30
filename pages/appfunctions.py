@@ -445,11 +445,37 @@ st.markdown("""
     <div style='margin-bottom: 1rem; color: gray;'>
         Made with ❤️ for English Language Learners in Ireland
     </div>
-    <div style='display: flex; justify-content: center; align-items: center; gap: 1rem;'>
-        <a href="https://groq.com" target="_blank" rel="noopener noreferrer">
+    <div style='color: gray; font-size: 0.9rem; margin-bottom: 1rem;'>
+        MSc in Artificial Intelligence Dissertation Project at Dublin Business School
+    </div>
+    <div style='font-size: 0.9rem; margin-bottom: 1rem; color: gray;'>
+        Powered by
+    </div>
+    <div style='display: flex; justify-content: center; align-items: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem;'>
+        <a href="https://groq.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
             <img
                 src="https://groq.com/wp-content/uploads/2024/03/PBG-mark1-color.svg"
-                alt="Powered by Groq for fast inference."
+                alt="Groq"
+                style="height: 30px; width: auto;"
+            />
+        </a>
+        <a href="https://deepgram.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <img
+                src="https://assets-global.website-files.com/624da6b260e6f95232ead1c4/6577ca003873faa00e3d9d1b_FullDG-Logo-Black.svg"
+                alt="Deepgram"
+                style="height: 30px; width: auto;"
+            />
+        </a>
+        <a href="https://ai.meta.com/llama/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; text-decoration: none; color: #000;">
+            <span style="font-weight: bold; font-size: 1.2rem;">Meta Llama</span>
+        </a>
+        <a href="https://openai.com/research/whisper" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; text-decoration: none; color: #000;">
+            <span style="font-weight: bold; font-size: 1.2rem;">Whisper</span>
+        </a>
+        <a href="https://cloud.google.com/text-to-speech" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <img
+                src="https://www.gstatic.com/devrel-devsite/prod/v5ba20c1e081870fd30b7c8ebfa8711569a575931201a0b98430cc463ceacd8c5/cloud/images/cloud-logo.svg"
+                alt="Google Cloud"
                 style="height: 30px; width: auto;"
             />
         </a>
