@@ -461,12 +461,12 @@ st.markdown("""
         </a>
         <a href="https://deepgram.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
             <img
-                src="https://assets-global.website-files.com/624da6b260e6f95232ead1c4/6577ca003873faa00e3d9d1b_FullDG-Logo-Black.svg"
+                src="https://www.datocms-assets.com/96965/1683539914-logo.svg"
                 alt="Deepgram"
                 style="height: 30px; width: auto;"
             />
         </a>
-        <a href="https://ai.meta.com/llama/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; text-decoration: none; color: #000;">
+        <a href="https://ai.meta.com/llama/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; text-decoration: none; color: #fff;">
             <span style="font-weight: bold; font-size: 1.2rem;">Meta Llama</span>
         </a>
         <a href="https://openai.com/research/whisper" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; text-decoration: none; color: #000;">
