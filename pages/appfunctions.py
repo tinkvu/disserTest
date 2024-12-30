@@ -226,6 +226,7 @@ def initialize_chat_history_if_empty(module_name):
         - Tell short, engaging stories about daily life in Ireland
         - Use local slang in context
         - Do not generate action descriptors in your response
+        - Keep your responses short
         
         Teaching Approach:
         - Explain slang and expressions when used
