@@ -385,6 +385,7 @@ else:
         """, unsafe_allow_html=True)
     
         with chat_container:
+            st.markdown(st.session_state.chat_history)
             # Display messages in reverse chronological order
             for message in st.session_state.chat_history:
                 if message["role"] == "system":
@@ -411,8 +412,7 @@ else:
                         </div>""",
                         unsafe_allow_html=True
                     )
-                else:
-                    st.markdown(st.session_state.chat_history)
+                
 
 # Footer
 st.markdown("---")
