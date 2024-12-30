@@ -372,71 +372,68 @@ else:
                     st.audio(response_audio_path, format="audio/mp3", autoplay=True)
 
     with right_col:
-        # Modified chat display section
+    st.markdown("### 💬 Conversation")
     
-        st.markdown("### 💬 Conversation")
-        
-        # Create a scrollable container with fixed height
-        chat_container = st.container()
-        
-        # Add custom CSS for better chat display
-        st.markdown("""
-            <style>
-            .chat-message {
-                padding: 1rem;
-                border-radius: 0.5rem;
-                margin-bottom: 1rem;
-                white-space: pre-wrap;
-                word-wrap: break-word;
-                color: #3A3B3C;
-            }
-            .user-message {
-                background-color: #f0f2f6;
-                margin-left: 20%;
-                text-align: right;
-            }
-            .assistant-message {
-                background-color: #e6f3e6;
-                margin-right: 20%;
-                text-align: left;
-            }
-            .translated-message {
-                background-color: #f5f5f5;
-                margin-right: 20%;
-                text-align: left;
-                font-style: italic;
-            }
-            </style>
-        """, unsafe_allow_html=True)
+    # Create a scrollable container with fixed height
+    chat_container = st.container()
     
-        with chat_container:
-            # st.markdown(st.session_state.chat_history)
-            # Display messages in reverse chronological order
-            for message in st.session_state.chat_history:
-                if message["role"] == "system":
-                    continue  # Skip system messages
-                
-                if message["role"] == "user":
-                    st.markdown(
-                        f"""<div class="chat-message user-message">
-                            👤 You:<br>{message['content']}
-                        </div>""", 
-                        unsafe_allow_html=True
-                    )
-                elif message["role"] == "assistant":
-                    st.markdown(
-                        f"""<div class="chat-message assistant-message">
-                            🤖 Engli:<br>{message['content']}
-                        </div>""",
-                        unsafe_allow_html=True
-                    )
-                elif message["role"] == "assistant_translated":
-                    st.markdown(
-                        f"""<div class="chat-message translated-message">
-                            🤖 Engli (Translated):<br>{message['content']}
-                        </div>""",
-                        unsafe_allow_html=True
-                    )
+    # Add custom CSS for better chat display
+    st.markdown("""
+        <style>
+        .chat-message {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #3A3B3C;
+        }
+        .user-message {
+            background-color: #f0f2f6;
+            margin-left: 20%;
+            text-align: right;
+        }
+        .assistant-message {
+            background-color: #e6f3e6;
+            margin-right: 20%;
+            text-align: left;
+        }
+        .translated-message {
+            background-color: #f5f5f5;
+            margin-right: 20%;
+            text-align: left;
+            font-style: italic;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    with chat_container:
+        # Get non-system messages
+        messages = [msg for msg in st.session_state.chat_history if msg["role"] != "system"]
+        
+        # Reverse the messages list to show latest messages first
+        for message in reversed(messages):
+            if message["role"] == "user":
+                st.markdown(
+                    f"""<div class="chat-message user-message">
+                        👤 You:<br>{message['content']}
+                    </div>""", 
+                    unsafe_allow_html=True
+                )
+            elif message["role"] == "assistant":
+                st.markdown(
+                    f"""<div class="chat-message assistant-message">
+                        🤖 Engli:<br>{message['content']}
+                    </div>""",
+                    unsafe_allow_html=True
+                )
+            elif message["role"] == "assistant_translated":
+                st.markdown(
+                    f"""<div class="chat-message translated-message">
+                        🤖 Engli (Translated):<br>{message['content']}
+                    </div>""",
+                    unsafe_allow_html=True
+                )
                 
 
 # Footer
