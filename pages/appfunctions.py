@@ -441,7 +441,18 @@ else:
 # Footer
 st.markdown("---")
 st.markdown("""
-<div style='text-align: center; color: gray;'>
-    Made with ❤️ for English Language Learners in Ireland
+<div style='text-align: center;'>
+    <div style='margin-bottom: 1rem; color: gray;'>
+        Made with ❤️ for English Language Learners in Ireland
+    </div>
+    <div style='display: flex; justify-content: center; align-items: center; gap: 1rem;'>
+        <a href="https://groq.com" target="_blank" rel="noopener noreferrer">
+            <img
+                src="https://groq.com/wp-content/uploads/2024/03/PBG-mark1-color.svg"
+                alt="Powered by Groq for fast inference."
+                style="height: 30px; width: auto;"
+            />
+        </a>
+    </div>
 </div>
 """, unsafe_allow_html=True)
