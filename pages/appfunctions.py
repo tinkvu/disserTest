@@ -411,6 +411,7 @@ else:
                         </div>""",
                         unsafe_allow_html=True
                     )
+                else st.markdown(st.session_state.chat_history)
 
 # Footer
 st.markdown("---")
