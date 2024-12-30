@@ -71,18 +71,15 @@ def clean_action_descriptors(text):
     """
     if not text:
         return text
-        
+
     # Remove content within parentheses with any characters including newlines
     text = re.sub(r'\([^)]+\)', '', text)
-    
-    # Remove content within single and double asterisks
+        # Remove content within single and double asterisks
     text = re.sub(r'\*\*[^*]+\*\*', '', text)
     text = re.sub(r'\*[^*]+\*', '', text)
-    
-    # Remove common emoji and action patterns
+        # Remove common emoji and action patterns
     text = re.sub(r'\[[^\]]+\]', '', text)  # Remove [actions]
-    text = re.sub(r'_[^_]+_', '', text)     # Remove _actions_
-    
+    text = re.sub(r'_[^_]+_', '', text)     # Remove _actions_    
     # Clean up any extra whitespace
     text = re.sub(r'\s+', ' ', text)        # Replace multiple spaces with single space
     text = re.sub(r'\s+([.,!?])', r'\1', text)  # Remove spaces before punctuation
@@ -267,6 +264,58 @@ def deepgram_tts(text, output_path="output_audio.mp3", module=None):
     except Exception as e:
         st.error(f"TTS generation failed: {e}")
         return None
+def show_learning_recommendations(speaking_level, mother_tongue):
+    if speaking_level.lower() == 'beginner':
+        st.info("👋 Welcome! Here's your recommended learning path:", icon="ℹ️")
+        
+        st.markdown("### 1️⃣ Start with Translation")
+        st.markdown(f"Begin with the **{mother_tongue} to English** module to:")
+        st.markdown("- Build basic vocabulary")
+        st.markdown("- Learn essential sentence structures")
+        st.markdown("- Understand grammar fundamentals")
+        
+        st.markdown("### 2️⃣ Practice Pronunciation")
+        st.markdown("Move to the **Pronunciation Checker** module to:")
+        st.markdown("- Master English sounds")
+        st.markdown("- Practice word stress and intonation")
+        st.markdown("- Build confidence in speaking")
+        
+        st.markdown("### 3️⃣ Start Conversations")
+        st.markdown("Finally, try the **English Conversation Friend** module to:")
+        st.markdown("- Practice simple dialogues")
+        st.markdown("- Learn everyday phrases")
+        st.markdown("- Build speaking confidence")
+
+    elif speaking_level.lower() == 'intermediate':
+        st.info("🎯 Here's your recommended learning path:", icon="ℹ️")
+        
+        st.markdown("### 1️⃣ English Conversation Friend")
+        st.markdown("Start with natural conversations to:")
+        st.markdown("- Improve fluency")
+        st.markdown("- Expand vocabulary")
+        st.markdown("- Practice various topics")
+        
+        st.markdown("### 2️⃣ Corporate English")
+        st.markdown("Then move to professional communication:")
+        st.markdown("- Learn business vocabulary")
+        st.markdown("- Practice email writing")
+        st.markdown("- Develop presentation skills")
+
+    elif speaking_level.lower() == 'advanced':
+        st.info("🚀 Here's your recommended learning path:", icon="ℹ️")
+        
+        st.markdown("### 1️⃣ Corporate English")
+        st.markdown("Focus on professional excellence:")
+        st.markdown("- Master business communication")
+        st.markdown("- Perfect presentation skills")
+        st.markdown("- Learn negotiation techniques")
+        
+        st.markdown("### 2️⃣ Irish Slang")
+        st.markdown("Explore cultural nuances:")
+        st.markdown("- Learn local expressions")
+        st.markdown("- Understand Irish culture")
+        st.markdown("- Master informal communication")
+
 
 
 # Initialize session state
@@ -295,7 +344,11 @@ with st.sidebar:
         # Add edit button to return to landing page
         if st.button("Edit Profile", type="secondary"):
             st.switch_page("app.py")
-
+    # Add this to your main app where appropriate
+    if "user_details" in st.session_state:
+        speaking_level = st.session_state.user_details.get('speaking_level', '')
+        mother_tongue = st.session_state.user_details.get('mother_tongue', '')
+        show_learning_recommendations(speaking_level, mother_tongue)
     # Get mother tongue for translation module name
     mother_tongue = st.session_state.user_details.get('mother_tongue', 'Any Language')
     translation_module_name = f"{mother_tongue} to English"
