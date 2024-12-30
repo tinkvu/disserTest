@@ -446,7 +446,7 @@ st.markdown("""
         Made with ❤️ for English Language Learners in Ireland
     </div>
     <div style='color: gray; font-size: 0.9rem; margin-bottom: 1rem;'>
-        MSc in Artificial Intelligence Dissertation Project at Dublin Business School
+        MSc in Artificial Intelligence Dissertation Project at Dublin Business School; Rinshad Choorappara [20021332]
     </div>
     <div style='font-size: 0.9rem; margin-bottom: 1rem; color: gray;'>
         Powered by
