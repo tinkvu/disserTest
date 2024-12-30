@@ -378,8 +378,6 @@ if "translations" not in st.session_state:
 #         {"role": "system", "content": system_prompts.get(module_name, "")}
 #     ]
 
-initialize_chat_history_if_empty(selected_module)
-
 # Sidebar Layout
 with st.sidebar:
     st.markdown("## 🌍 Engli Language Trainer")
@@ -443,7 +441,9 @@ if selected_module != translation_module_name:
 else:
     st.title(f"🎤 {selected_module}")
     
-initialize_chat_history(selected_module)
+# initialize_chat_history(selected_module)
+initialize_chat_history_if_empty(selected_module)
+
 # Interaction Modules
 left_col, right_col = st.columns([1, 2])
 
