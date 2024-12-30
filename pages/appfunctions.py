@@ -64,6 +64,14 @@ def show_level_recommendations(name, level, mother_tongue):
            st.session_state.welcome_shown = True
            st.rerun()
 
+# Add this function to show the learning path
+def view_learning_path():
+    if "user_details" in st.session_state:
+        user_name = st.session_state.user_details.get('name', '')
+        speaking_level = st.session_state.user_details.get('speaking_level', '')
+        mother_tongue = st.session_state.user_details.get('mother_tongue', '')
+        show_level_recommendations(user_name, speaking_level, mother_tongue)
+
 # In your main app
 if "welcome_shown" not in st.session_state and "user_details" in st.session_state:
    user_name = st.session_state.user_details.get('name', '')
@@ -340,6 +348,9 @@ with st.sidebar:
         # Add edit button to return to landing page
         if st.button("Edit Profile", type="secondary"):
             st.switch_page("app.py")
+    st.markdown("---")
+    if st.button("📚 View My Learning Path", type="secondary"):
+        view_learning_path()
    
     mother_tongue = st.session_state.user_details.get('mother_tongue', 'Any Language')
     translation_module_name = f"{mother_tongue} to English"
