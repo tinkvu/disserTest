@@ -22,52 +22,54 @@ DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
 client = Groq(api_key=GROQ_API_KEY)
 deepgram = DeepgramClient(DEEPGRAM_API_KEY)
 
-@st.dialog("Your Personalized Learning Path")
-def show_level_recommendations(level, name,mother_tongue):
-    if level.lower() == 'beginner':
-        st.info(f"👋 Hi {name}, Here's your recommended path to fluency:")
-        
-        st.markdown("### 1️⃣ Start with Translation")
-        st.markdown(f"Begin with **{mother_tongue} to English** module")
-        st.markdown("### 2️⃣ Practice Pronunciation")
-        st.markdown("Move to **Pronunciation Checker**")
-        st.markdown("### 3️⃣ Start Basic Conversations")
-        st.markdown("Finally, try **English Conversation Friend**")
-        
-        if st.button("Got it!"):
-            st.session_state.path_shown = True
-            st.rerun()
+@st.dialog("Welcome!")
+def show_level_recommendations(name, level, mother_tongue):
+   st.markdown(f"### 👋 Hi {name}!")
+   
+   if level.lower() == 'beginner':
+       st.info("Based on your beginner level, here's your recommended path:", icon="ℹ️")
+       
+       st.markdown("### 1️⃣ Start with Translation")
+       st.markdown(f"Begin with **{mother_tongue} to English** module to build your foundation")
+       st.markdown("### 2️⃣ Practice Pronunciation") 
+       st.markdown("Use **Pronunciation Checker** to improve your speaking")
+       st.markdown("### 3️⃣ Start Basic Conversations")
+       st.markdown("Try **English Conversation Friend** when you're ready")
+       
+       if st.button("Let's Start Learning!"):
+           st.session_state.welcome_shown = True
+           st.rerun()
 
-    elif level.lower() == 'intermediate':
-        st.info("🎯 Perfect timing to level up your English:", icon="ℹ️")
-        
-        st.markdown("### 1️⃣ English Conversation Friend")
-        st.markdown("Master daily conversations")
-        st.markdown("### 2️⃣ Corporate English")
-        st.markdown("Learn professional communication")
-        
-        if st.button("Got it!"):
-            st.session_state.path_shown = True
-            st.rerun()
+   elif level.lower() == 'intermediate':
+       st.info("With your intermediate level, let's focus on fluency:", icon="ℹ️")
+       
+       st.markdown("### 1️⃣ English Conversation Friend")
+       st.markdown("Practice natural conversations to build confidence")
+       st.markdown("### 2️⃣ Corporate English")
+       st.markdown("Learn professional communication skills")
+       
+       if st.button("Let's Start Learning!"):
+           st.session_state.welcome_shown = True
+           st.rerun()
 
-    else:  # advanced
-        st.info("🚀 Ready to perfect your English:", icon="ℹ️")
-        
-        st.markdown("### 1️⃣ Corporate English")
-        st.markdown("Excel in business communication")
-        st.markdown("### 2️⃣ Irish Slang")
-        st.markdown("Master cultural expressions")
-        
-        if st.button("Got it!"):
-            st.session_state.path_shown = True
-            st.rerun()
+   else:  # advanced
+       st.info("With your advanced level, let's perfect your skills:", icon="ℹ️")
+       
+       st.markdown("### 1️⃣ Corporate English")
+       st.markdown("Master business communication and presentations")
+       st.markdown("### 2️⃣ Irish Slang")
+       st.markdown("Learn authentic Irish expressions and culture")
+       
+       if st.button("Let's Start Learning!"):
+           st.session_state.welcome_shown = True
+           st.rerun()
 
 # In your main app
-if "path_shown" not in st.session_state and "user_details" in st.session_state:
-    speaking_level = st.session_state.user_details.get('speaking_level', '')
-    name = st.session_state.user_details.get('name', '')
-    mother_tongue = st.session_state.user_details.get('mother_tongue', '')
-    show_level_recommendations(speaking_level, mother_tongue)
+if "welcome_shown" not in st.session_state and "user_details" in st.session_state:
+   user_name = st.session_state.user_details.get('name', '')
+   speaking_level = st.session_state.user_details.get('speaking_level', '')
+   mother_tongue = st.session_state.user_details.get('mother_tongue', '')
+   show_level_recommendations(user_name, speaking_level, mother_tongue)
 
 # Helper function to translate text
 def translate_text(text, target_language):
