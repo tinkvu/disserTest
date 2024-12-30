@@ -1,4 +1,3 @@
-#Landing Page
 import streamlit as st
 
 st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_icon="📖")
@@ -7,12 +6,78 @@ st.set_page_config(layout="wide", page_title="Engli - English Trainer", page_ico
 st.title("Your AI English Learning Companion")
 st.markdown("### Transform your English learning journey with personalized AI assistance")
 
-# Brief introduction
-st.markdown("""
-Our AI-powered platform offers multiple specialized modules to help you master English:
-""")
+# Initial Assessment Form
+with st.form("initial_assessment"):
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        mother_tongue = st.text_input("Your Mother Tongue:", value="Spanish")
+    with col2:
+        speaking_level = st.selectbox("English Speaking Level:", ["Beginner", "Intermediate", "Advanced"])
+    
+    submit_assessment = st.form_submit_button("Show Recommended Learning Path", use_container_width=True)
 
-# Module descriptions using columns
+if submit_assessment or 'speaking_level' in st.session_state:
+    level = speaking_level if submit_assessment else st.session_state.get('speaking_level')
+    native_lang = mother_tongue if submit_assessment else st.session_state.get('mother_tongue')
+    
+    # Display recommended path based on level
+    st.markdown("### 🎯 Your Recommended Learning Path")
+    
+    if level == "Beginner":
+        st.info(f"""
+        ### Perfect Starting Point for Beginners
+        We recommend following this sequence to build a strong foundation:
+        
+        1. **{native_lang} to English Translation Module**
+           - Start with familiar concepts
+           - Learn basic vocabulary and phrases
+           - Get comfortable with English structure
+        
+        2. **Pronunciation Checker**
+           - Master basic English sounds
+           - Practice common words
+           - Get instant feedback
+        
+        3. **English Conversation Friend**
+           - Begin simple conversations
+           - Learn everyday phrases
+           - Build confidence gradually
+        """)
+    
+    elif level == "Intermediate":
+        st.info("""
+        ### Enhance Your Skills
+        Focus on these modules to advance your English:
+        
+        1. **English Conversation Friend**
+           - Practice natural conversations
+           - Expand vocabulary
+           - Learn idioms and expressions
+        
+        2. **Corporate English**
+           - Develop professional communication
+           - Learn business terminology
+           - Master email writing
+        """)
+    
+    else:  # Advanced
+        st.info("""
+        ### Perfect Your English
+        Take your English to the next level:
+        
+        1. **Corporate English**
+           - Master complex business scenarios
+           - Perfect professional writing
+           - Lead meetings confidently
+        
+        2. **Irish Slang**
+           - Understand local expressions
+           - Master regional accents
+           - Gain cultural insights
+        """)
+
+# Main content continues with module descriptions
 col1, col2 = st.columns(2)
 
 with col1:
@@ -30,14 +95,6 @@ with col1:
     - Professional vocabulary
     - Meeting participation
     - Email writing
-    """)
-    # Key Features
-    st.markdown("### ✨ Key Features")
-    st.markdown("""
-    - 🎤 **Voice Interaction**: Practice speaking with real-time feedback
-    - 🔄 **Instant Translations**: Get translations in your native language
-    - 🗣️ **Pronunciation Help**: Learn correct pronunciation
-    - 📝 **Personalized Learning**: Adapts to your level and needs
     """)
 
 with col2:
@@ -57,22 +114,9 @@ with col2:
     - Natural English equivalents
     """)
 
-    # Languages that Work Best
-    st.markdown("### 🌐 Languages that Work Best")
-    st.markdown("""
-    **European**:
-    English, Spanish, French, German, Italian, Portuguese (European and Brazilian), Dutch, Russian, Polish, Ukrainian  
-    **Asian**:
-    Mandarin Chinese, Japanese, Korean, Hindi, Bengali, Turkish, Vietnamese, Thai  
-    **Middle Eastern & African**:
-    Arabic, Swahili  
-    **South American**:
-    Spanish, Portuguese (Brazilian)  
-    These languages are optimized for accuracy and natural communication.
-    """)
 # Get Started Section
 st.markdown("### 🚀 Ready to Start?")
-st.markdown("Tell us about yourself to personalize your learning experience")
+st.markdown("Complete your profile to begin your personalized learning journey")
 
 # User Details Form
 with st.form("user_details_form"):
@@ -86,14 +130,22 @@ with st.form("user_details_form"):
     
     with col2:
         nationality = st.text_input("Your Nationality:", value="Mexico")
-        mother_tongue = st.text_input("Your Mother Tongue:", value="Spanish")
-        speaking_level = st.selectbox("English Speaking Level:", ["Beginner", "Intermediate", "Advanced"])
+        # Pre-fill with previously selected values
+        if submit_assessment:
+            st.session_state['mother_tongue'] = mother_tongue
+            st.session_state['speaking_level'] = speaking_level
+        mother_tongue_profile = st.text_input("Your Mother Tongue:", value=st.session_state.get('mother_tongue', ''))
+        speaking_level_profile = st.selectbox(
+            "English Speaking Level:",
+            ["Beginner", "Intermediate", "Advanced"],
+            index=["Beginner", "Intermediate", "Advanced"].index(st.session_state.get('speaking_level', 'Beginner'))
+        )
 
     # Start button
     start_button = st.form_submit_button("Start Learning! 🚀", type="primary", use_container_width=True)
     
     if start_button:
-        if not all([name, profession, nationality, mother_tongue]):
+        if not all([name, profession, nationality, mother_tongue_profile]):
             st.error("Please fill in all the fields to continue.")
         else:
             # Save user details to session state
@@ -102,14 +154,14 @@ with st.form("user_details_form"):
                 "age": age,
                 "profession": profession,
                 "nationality": nationality,
-                "mother_tongue": mother_tongue,
-                "speaking_level": speaking_level
+                "mother_tongue": mother_tongue_profile,
+                "speaking_level": speaking_level_profile
             }
             # Redirect to main app
             st.success("Profile saved! Redirecting to the main application...")
             st.switch_page("pages/appfunctions.py")
 
-# Footer
+# Footer (same as original)
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center;'>
