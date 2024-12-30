@@ -68,7 +68,7 @@ with st.form("user_details_form"):
         speaking_level = st.selectbox("English Speaking Level:", ["Beginner", "Intermediate", "Advanced"])
 
     # Start button
-    start_button = st.form_submit_button("Get Your Learning Path! 🚀", type="primary", use_container_width=True)
+    start_button = st.form_submit_button("Start Learning! 🚀", type="primary", use_container_width=True)
     
     if start_button:
         if not all([name, profession, nationality, mother_tongue]):
@@ -150,8 +150,8 @@ with st.form("user_details_form"):
                 This path will help you achieve near-native fluency and cultural understanding.
                 """)
             
-            st.success("Profile saved! Click 'Start Learning' to begin your journey.")
-            st.button("Start Learning", type="primary", on_click=lambda: st.switch_page("pages/appfunctions.py"))
+            st.success("Profile saved! Redirecting to the main application...")
+            st.switch_page("pages/appfunctions.py")
 
 # Footer
 st.markdown("---")
