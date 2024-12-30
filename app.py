@@ -11,6 +11,19 @@ st.markdown("""
 Our AI-powered platform offers multiple specialized modules to help you master English:
 """)
 
+st.markdown("""
+If you are sure that your english is perfect and you can understand any Irish accent, then try to understand what this guy is saying in the video below:
+""")
+# Embed the YouTube video using iframe
+st.components.v1.html(
+    """
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/nJ7QB3om-QY?si=MnoNtWFO8J7sJ2NU" 
+    title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; 
+    gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+    </iframe>
+    """,
+    height=315,
+)
 # Module descriptions using columns
 col1, col2 = st.columns(2)
 
