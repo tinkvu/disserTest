@@ -39,7 +39,7 @@ deepgram = DeepgramClient(DEEPGRAM_API_KEY)
 def translate_text(text, target_language):
     try:
         response = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="llama-3.1-70b-versatile",
             messages=[
                 {"role": "system", "content": "Translate the following text into " + target_language + ". Response should be just only the translation."},
                 {"role": "user", "content": text},
