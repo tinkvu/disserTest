@@ -484,7 +484,7 @@ else:
                         </div>""",
                         unsafe_allow_html=True
                     )
-                 elif message["role"] == "assistant":
+                elif message["role"] == "assistant":
                     st.markdown(
                         f"""<div class="chat-message assistant-message">
                             🤖 Engli:<br>{message['content']}
