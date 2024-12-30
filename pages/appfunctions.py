@@ -23,7 +23,7 @@ client = Groq(api_key=GROQ_API_KEY)
 deepgram = DeepgramClient(DEEPGRAM_API_KEY)
 
 @st.dialog("Your Personalized Learning Path")
-def show_level_recommendations(level, mother_tongue):
+def show_level_recommendations(level, name,mother_tongue):
     if level.lower() == 'beginner':
         st.info(f"👋 Hi {name}, Here's your recommended path to fluency:")
         
@@ -65,6 +65,7 @@ def show_level_recommendations(level, mother_tongue):
 # In your main app
 if "path_shown" not in st.session_state and "user_details" in st.session_state:
     speaking_level = st.session_state.user_details.get('speaking_level', '')
+    name = st.session_state.user_details.get('name', '')
     mother_tongue = st.session_state.user_details.get('mother_tongue', '')
     show_level_recommendations(speaking_level, mother_tongue)
 
