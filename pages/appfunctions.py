@@ -92,39 +92,42 @@ def clean_action_descriptors(text):
 
 def generate_response(text, target_language):
     try:
+        # Add system initialization if chat history is empty
         if len(st.session_state.chat_history) == 0:
-            # Add system initialization to chat history
-            st.session_state.chat_history.append({"role": "system", "content": "You are Engli, an AI English trainer."})
+            st.session_state.chat_history.append({
+                "role": "system",
+                "content": "You are Engli, an AI English trainer. Respond in a friendly and helpful tone."
+            })
 
-        # Filter out assistant_translated messages for API call
-        api_messages = [msg for msg in st.session_state.chat_history if msg["role"] != "assistant_translated"]
-        api_messages.append({"role": "user", "content": text})
+        # Add the user's message to chat history
+        st.session_state.chat_history.append({"role": "user", "content": text})
 
+        # Send full chat history to the API
         completion = client.chat.completions.create(
             model="llama-3.1-70b-versatile",
-            messages=api_messages,
+            messages=st.session_state.chat_history,
             temperature=1,
             max_tokens=1024,
             top_p=1,
             stream=False
         )
-        assistant_response = completion.choices[0].message.content
-        # Clean the response before storing and translating
-        cleaned_response = clean_action_descriptors(assistant_response)
-        
-        # Add messages to chat history
-        st.session_state.chat_history.append({"role": "user", "content": text})
-        st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
 
-        # Translate the assistant response to the target language
-        translated_response = translate_text(assistant_response, target_language)
-        # Store translation with special role (won't be used in API calls)
+        # Process the assistant's response
+        assistant_response = completion.choices[0].message.content
+        cleaned_response = clean_action_descriptors(assistant_response)
+
+        # Add assistant's response to chat history
+        st.session_state.chat_history.append({"role": "assistant", "content": cleaned_response})
+
+        # Translate the assistant's response
+        translated_response = translate_text(cleaned_response, target_language)
         st.session_state.chat_history.append({"role": "assistant_translated", "content": translated_response})
 
-        return assistant_response, translated_response
+        return cleaned_response, translated_response
     except Exception as e:
         st.error(f"Response generation failed: {e}")
-        return "Sorry, I'm having trouble generating a response right now.", None
+        return "Sorry, I encountered an error.", None
+
 
 # Function to play audio using Deepgram TTS
 def deepgram_tts(text, output_path="output_audio.mp3", module=None):
