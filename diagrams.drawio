@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="26.0.2">
   <diagram name="Page-1" id="-qRsSEHnnurE8UE7EGcE">
-    <mxGraphModel dx="1615" dy="1957" grid="1" gridSize="13" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1909" dy="2113" grid="1" gridSize="13" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -19,11 +19,14 @@
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="434" y="232" as="sourcePoint" />
             <mxPoint x="534" y="230" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="434" y="230" />
+            </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="q6pytBnaq6bYR-qkNYE7-15" value="Transcription" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=1;points=[];movable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" parent="q6pytBnaq6bYR-qkNYE7-14" vertex="1" connectable="0">
           <mxGeometry x="-0.3117" y="-1" relative="1" as="geometry">
-            <mxPoint x="2" y="-9" as="offset" />
+            <mxPoint x="11" y="-4" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="q6pytBnaq6bYR-qkNYE7-8" value="(groq/whisper-large-v3)" style="swimlane;whiteSpace=wrap;html=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" parent="1" vertex="1">
@@ -119,7 +122,12 @@
           <mxGeometry x="1456" y="455" width="1566.56" height="689" as="geometry" />
         </mxCell>
         <mxCell id="q6pytBnaq6bYR-qkNYE7-62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.594;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="q6pytBnaq6bYR-qkNYE7-61" target="q6pytBnaq6bYR-qkNYE7-48" edge="1">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="619" y="-65" />
+              <mxPoint x="619" y="-65" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="q6pytBnaq6bYR-qkNYE7-83" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn4.iconfinder.com/data/icons/app-custom-ui-1/48/Edit-128.png" parent="1" vertex="1">
           <mxGeometry x="414.5" y="624" width="50" height="50" as="geometry" />
@@ -235,7 +243,7 @@
         <mxCell id="q6pytBnaq6bYR-qkNYE7-120" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.018;entryY=0.324;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="q6pytBnaq6bYR-qkNYE7-116" target="q6pytBnaq6bYR-qkNYE7-114" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="q6pytBnaq6bYR-qkNYE7-122" value="" style="swimlane;startSize=0;" parent="1" vertex="1">
+        <mxCell id="q6pytBnaq6bYR-qkNYE7-122" value="z " style="swimlane;startSize=0;" parent="1" vertex="1">
           <mxGeometry x="89" y="-182" width="1081" height="754" as="geometry" />
         </mxCell>
         <mxCell id="q6pytBnaq6bYR-qkNYE7-61" value="&lt;h1 style=&quot;margin-top: 0px; font-size: 14px;&quot;&gt;System Prompt +{user_info}&lt;/h1&gt;&lt;p style=&quot;font-size: 11px;&quot;&gt;Customized system prompts for each modules.&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="q6pytBnaq6bYR-qkNYE7-122" vertex="1">
@@ -247,9 +255,8 @@
         <mxCell id="q6pytBnaq6bYR-qkNYE7-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.024;entryY=0.593;entryDx=0;entryDy=0;entryPerimeter=0;" parent="q6pytBnaq6bYR-qkNYE7-122" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="998.5700000000002" y="637" />
-              <mxPoint x="998.5700000000002" y="195" />
-              <mxPoint x="586.57" y="195" />
+              <mxPoint x="999" y="637" />
+              <mxPoint x="999" y="188" />
             </Array>
             <mxPoint x="934" y="637" as="sourcePoint" />
             <mxPoint x="587.0020000000003" y="187.567" as="targetPoint" />
