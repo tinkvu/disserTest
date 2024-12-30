@@ -469,12 +469,12 @@ st.markdown("""
         <a href="https://ai.meta.com/llama/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; text-decoration: none; color: #fff;">
             <span style="font-weight: bold; font-size: 1.2rem;">Meta Llama</span>
         </a>
-        <a href="https://openai.com/research/whisper" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; text-decoration: none; color: #000;">
+        <a href="https://openai.com/research/whisper" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; text-decoration: none; color: #fff;">
             <span style="font-weight: bold; font-size: 1.2rem;">Whisper</span>
         </a>
         <a href="https://cloud.google.com/text-to-speech" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
             <img
-                src="https://www.gstatic.com/devrel-devsite/prod/v5ba20c1e081870fd30b7c8ebfa8711569a575931201a0b98430cc463ceacd8c5/cloud/images/cloud-logo.svg"
+                src="https://www.gstatic.com/devrel-devsite/prod/v0e0f589edd85502a40d78d7d0825db8ea5ef3b99ab4070381ee86977c9168730/cloud/images/cloud-logo.svg"
                 alt="Google Cloud"
                 style="height: 30px; width: auto;"
             />
