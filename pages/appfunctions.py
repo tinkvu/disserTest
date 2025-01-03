@@ -306,6 +306,10 @@ def generate_response(text, target_language):
         model_name = "llama-3.1-70b-versatile"
         cost_per_1k_tokens = client.models[model_name]['cost_per_1k_tokens']
         cost = (total_tokens / 1000) * cost_per_1k_tokens
+        # Display metrics
+        st.info(f"**Latency:** {latency:.2f} seconds")
+        st.info(f"**Total Tokens:** {total_tokens}")
+        st.info(f"**Cost:** ${cost:.4f}")
         
         # Update session state chat history
         st.session_state.chat_history.append({"role": "user", "content": text})
