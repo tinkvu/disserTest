@@ -288,9 +288,21 @@ def generate_response(text, target_language):
             top_p=1,
             stream=False
         )
+        # Calculate latency
+        latency = time.time() - start_time
         
         assistant_response = completion.choices[0].message.content
         cleaned_response = clean_action_descriptors(assistant_response)
+
+        # Count tokens
+        input_tokens = sum(len(msg['content'].split()) for msg in api_messages)
+        output_tokens = len(cleaned_response.split())
+        total_tokens = input_tokens + output_tokens
+
+        # Calculate cost
+        model_name = "llama-3.1-70b-versatile"
+        cost_per_1k_tokens = client.models[model_name]['cost_per_1k_tokens']
+        cost = (total_tokens / 1000) * cost_per_1k_tokens
         
         # Update session state chat history
         st.session_state.chat_history.append({"role": "user", "content": text})
@@ -470,6 +482,20 @@ else:
             # Get non-system messages
             messages = [msg for msg in st.session_state.chat_history if msg["role"] != "system"]
             # st.markdown(st.session_state.chat_history)
+            # Add a button to copy results and chat history
+            if st.button("Copy Results and Chat History"):
+                chat_history_text = "\n\n".join(
+                    f"{msg['role'].capitalize()}: {msg['content']}" for msg in st.session_state.chat_history
+                )
+                results_text = (
+                    f"Latency: {latency:.2f} seconds\n"
+                    f"Total Tokens: {total_tokens}\n"
+                    f"Cost: ${cost:.4f}\n\n"
+                    f"Chat History:\n{chat_history_text}"
+                )
+                st.write("Copied Results and Chat History to Clipboard")
+                st.code(results_text)
+
             
             # Reverse the messages list to show latest messages first
             for message in reversed(messages):
