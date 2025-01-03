@@ -8,7 +8,7 @@ import tempfile
 from st_audiorec import st_audiorec
 import random
 import re
-
+import json
 # Check if user details exist
 if "user_details" not in st.session_state:
     st.warning("Redirecting to the landing page. Please set up your profile.")
@@ -469,7 +469,7 @@ else:
         with chat_container:
             # Get non-system messages
             messages = [msg for msg in st.session_state.chat_history if msg["role"] != "system"]
-            st.markdown(st.session_state.chat_history)
+            # st.markdown(st.session_state.chat_history)
             
             # Reverse the messages list to show latest messages first
             for message in reversed(messages):
@@ -494,7 +494,18 @@ else:
                         </div>""",
                         unsafe_allow_html=True
                     )
+            
+            st.markdown("## 💬 Full Chat History (JSON Format)")
+            
+            # Check if chat history exists
+            if st.session_state.get("chat_history"):
+                # Convert chat history to JSON format
+                chat_history_json = json.dumps(st.session_state.chat_history, indent=4)
                 
+                # Display the JSON-formatted chat history
+                st.code(chat_history_json, language="json")
+            else:
+                st.info("No chat history available.")    
 # Footer
 st.markdown("---")
 st.markdown("""
