@@ -162,7 +162,7 @@ def initialize_chat_history_if_empty(module_name):
         translation_module_name = f"{mother_tongue} to English"
         
         system_prompts = {
-        "English Conversation Friend": f"""You are Engli, a 28-year-old English teacher from Boston who loves traveling and meeting new people. Your teaching style is warm and conversational.
+        "English Conversation Friend": f"""You are Engli, a 28-year-old English teacher from Ireland who loves traveling and meeting new people. Your teaching style is warm and conversational.
         
         Role: Create an immersive, natural English learning experience through friendly conversation as we talk. Correct mistakes of the user if any.
         
@@ -494,17 +494,17 @@ else:
                         unsafe_allow_html=True
                     )
             
-            st.markdown("## 💬 Full Chat History (JSON Format)")
+            # st.markdown("## 💬 Full Chat History (JSON Format)")
             
-            # Check if chat history exists
-            if st.session_state.get("chat_history"):
-                # Convert chat history to JSON format
-                chat_history_json = json.dumps(st.session_state.chat_history, indent=4)
+            # # Check if chat history exists
+            # if st.session_state.get("chat_history"):
+            #     # Convert chat history to JSON format
+            #     chat_history_json = json.dumps(st.session_state.chat_history, indent=4)
                 
-                # Display the JSON-formatted chat history
-                st.code(chat_history_json, language="json")
-            else:
-                st.info("No chat history available.")    
+            #     # Display the JSON-formatted chat history
+            #     st.code(chat_history_json, language="json")
+            # else:
+            #     st.info("No chat history available.")    
 # Footer
 st.markdown("---")
 st.markdown("""
