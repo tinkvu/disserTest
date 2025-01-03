@@ -469,6 +469,7 @@ else:
         with chat_container:
             # Get non-system messages
             messages = [msg for msg in st.session_state.chat_history if msg["role"] != "system"]
+            st.markdown(st.session_state.chat_history)
             
             # Reverse the messages list to show latest messages first
             for message in reversed(messages):
@@ -493,10 +494,7 @@ else:
                         </div>""",
                         unsafe_allow_html=True
                     )
-                else:
-                    st.markdown(st.session_state.chat_history)
-                    
-
+                
 # Footer
 st.markdown("---")
 st.markdown("""
