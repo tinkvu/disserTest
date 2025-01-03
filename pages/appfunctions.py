@@ -86,7 +86,7 @@ def translate_text(text, target_language):
         response = client.chat.completions.create(
             model="llama-3.2-1b-preview",
             messages=[
-                {"role": "system", "content": "Translate the following text into " + target_language + ". Response should be just only the translation. Example input: Irish Slang; Example output: Argot irlandés"},
+                {"role": "system", "content": "Translate the following text into " + target_language + ". Response should be just only the translation. Example input: "Irish Slang"; Example response: "Argot irlandés""},
                 {"role": "user", "content": text},
             ],
             max_tokens=512,
