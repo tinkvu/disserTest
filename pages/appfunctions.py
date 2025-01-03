@@ -493,7 +493,7 @@ else:
                         </div>""",
                         unsafe_allow_html=True
                     )
-                elif :
+                else:
                     st.markdown(st.session_state.chat_history)
                     
 
