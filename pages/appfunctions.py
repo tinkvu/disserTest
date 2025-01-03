@@ -312,7 +312,8 @@ def generate_response(text, target_language):
 # Function to play audio using Deepgram TTS
 def deepgram_tts(text, output_path="output_audio.mp3", module=None):
     try:
-        options = SpeakOptions(model="aura-angus-en" if module == "Irish Slang" else "aura-asteria-en")
+        #options = SpeakOptions(model="aura-angus-en" if module == "Irish Slang" else "aura-asteria-en")
+        options = SpeakOptions(model="aura-angus-en")
         audio_folder = os.path.join("static", "audio")
         if not os.path.exists(audio_folder):
             os.makedirs(audio_folder)
