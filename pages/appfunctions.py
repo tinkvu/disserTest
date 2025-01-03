@@ -9,6 +9,7 @@ from st_audiorec import st_audiorec
 import random
 import re
 import json
+import time
 # Check if user details exist
 if "user_details" not in st.session_state:
     st.warning("Redirecting to the landing page. Please set up your profile.")
