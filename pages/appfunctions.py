@@ -280,6 +280,8 @@ def generate_response(text, target_language):
         
         # Add the new user message
         api_messages.append({"role": "user", "content": text})
+        # Record the start time
+        start_time = time.time()
         
         completion = client.chat.completions.create(
             model="llama-3.1-70b-versatile",
