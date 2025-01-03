@@ -84,7 +84,7 @@ if "welcome_shown" not in st.session_state and "user_details" in st.session_stat
 def translate_text(text, target_language):
     try:
         response = client.chat.completions.create(
-            model="llama-3.1-70b-versatile",
+            model="llama-3.2-1b-preview",
             messages=[
                 {"role": "system", "content": "Translate the following text into " + target_language + ". Response should be just only the translation."},
                 {"role": "user", "content": text},
@@ -284,7 +284,7 @@ def generate_response(text, target_language):
         # start_time = time.time()
         
         completion = client.chat.completions.create(
-            model="llama-3.1-70b-versatile",
+            model="llama-3.2-1b-preview",
             messages=api_messages,
             temperature=1,
             max_tokens=1024,
