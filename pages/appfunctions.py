@@ -156,7 +156,7 @@ def initialize_chat_history_if_empty(module_name):
     
     # Only initialize if chat history is empty or module has changed
     if len(st.session_state.chat_history) == 0 or st.session_state.current_module != module_name:
-        user_info = f"Name: {st.session_state.user_details.get('name', 'User')}, Profession: {st.session_state.user_details.get('profession', 'Unknown')}, Nationality: {st.session_state.user_details.get('nationality', 'Unknown')}, Age: {st.session_state.user_details.get('age', 'Not Specified')}"
+        user_info = f"The user is; Name: {st.session_state.user_details.get('name', 'User')}, Profession: {st.session_state.user_details.get('profession', 'Unknown')}, Nationality: {st.session_state.user_details.get('nationality', 'Unknown')}, Age: {st.session_state.user_details.get('age', 'Not Specified')}"
         
         mother_tongue = st.session_state.user_details.get('mother_tongue', 'Any Language')
         translation_module_name = f"{mother_tongue} to English"
