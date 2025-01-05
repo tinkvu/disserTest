@@ -1,0 +1,5 @@
+,Avg Latency (s),Avg Efficiency (%),Total Cost ($),Total Tokens,Cost per Token ($),Avg Tokens/s,Max Context Length,Languages Supported
+gemma2-9b-it,0.379,271.966,0.002,10585,0.0,1359.83,8192,30
+llama-3.2-1b-preview,0.423,25.14,0.0,4663,0.0,779.345,8192,50
+llama-3.3-70b-versatile,1.445,168.713,0.004,5881,0.0,463.962,128000,120
+mixtral-8x7b-32768,0.657,223.228,0.002,6850,0.0,1283.563,32768,80
